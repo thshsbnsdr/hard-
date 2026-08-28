@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Góc Video Anime</title>
+    <style>
+        /* Cài đặt hình nền Anime */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Bạn có thể thay đổi link ảnh nền anime dưới đây */
+            background-image: url('https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+        }
+
+        /* Lớp phủ tối mờ để chữ dễ đọc hơn */
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.4);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        /* Khu vực đặt quảng cáo tinh tế */
+        .ad-banner {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            text-align: center;
+            padding: 15px;
+            margin: 0 auto 30px auto;
+            max-width: 800px;
+            color: #ddd;
+        }
+
+        /* Lưới hiển thị Video */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hiệu ứng kính mờ (Glassmorphism) cho từng video */
+        .video-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .video-title {
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <header>
+            <h1>Thư Viện Video Của Tôi</h1>
+        </header>
+
+        <div class="ad-banner">
+            [Khu vực hiển thị Quảng Cáo Tinh Tế - Dán mã Code Quảng Cáo vào đây]
+        </div>
+
+        <div class="video-grid" id="video-container">
+            </div>
+    </div>
+
+    <script>
+        // THAY ĐƯỜNG LINK CSV CỦA BẠN VÀO BÊN DƯỚI
+        const sheetCsvUrl = 'DÁN_LINK_CSV_GOOGLE_SHEETS_CỦA_BẠN_VÀO_ĐÂY';
+
+        async function fetchVideos() {
+            try {
+                const response = await fetch(sheetCsvUrl);
+                const data = await response.text();
+                
+                // Tách dữ liệu thành từng hàng, bỏ qua hàng tiêu đề đầu tiên
+                const rows = data.split('\n').slice(1);
+                const container = document.getElementById('video-container');
+                container.innerHTML = ''; // Xóa chữ "Đang tải..."
+
+                rows.forEach(row => {
+                    // Tách dữ liệu bằng dấu phẩy
+                    const columns = row.split(',');
+                    if (columns.length >= 3) {
+                        const title = columns[0].trim();
+                        const thumbnail = columns[1].trim();
+                        const videoLink = columns[2].trim();
+
+                        if (title && videoLink) {
+                            // Tạo thẻ HTML cho video
+                            const card = `
+                                <a href="${videoLink}" target="_blank" class="video-card">
+                                    <img src="${thumbnail}" alt="${title}" class="video-thumbnail">
+                                    <div class="video-title">${title}</div>
+                                </a>
+                            `;
+                            container.innerHTML += card;
+                        }
+                    }
+                });
+            } catch (error) {
+                document.getElementById('video-container').innerHTML = '<p style="text-align:center;">Lỗi kết nối đến Google Sheets!</p>';
+                console.error('Lỗi:', error);
+            }
+        }
+
+        // Chạy hàm lấy dữ liệu khi web vừa load xong
+        fetchVideos();
+    </script>
+</body>
+</html>
