@@ -3,26 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KiraKira Cosplay - Thế Giới Anime</title>
+    <title>KiraKira Cosplay - Nơi Để AE Giải Tỏa</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
-            /* Màu chủ đạo xanh neon */
-            --primary: #00e5ff; 
+            var(--primary): #00e5ff; 
+            --primary: #00e5ff;
             --card-bg: rgba(20, 20, 25, 0.85);
             --text: #ffffff;
         }
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* === ẢNH NỀN BẠN YÊU CẦU ĐÃ ĐƯỢC THÊM VÀO ĐÂY === */
-            background-image: url('https://i.postimg.cc/ZqYZf0PJ/snapedit-1789566091564.jpg'); 
+            background-image: url('https://i.postimg.cc/gcN7Dnwp/images.jpg'); 
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             color: var(--text);
         }
-        /* Lớp phủ làm tối ảnh nền một chút để chữ dễ đọc hơn */
         .overlay {
             background-color: rgba(0, 0, 0, 0.6);
             min-height: 100vh;
@@ -56,7 +54,7 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        /* Giao diện thẻ video (Card) */
+        /* Card Styles */
         .card {
             background-color: var(--card-bg);
             border-radius: 12px;
@@ -75,37 +73,60 @@
             box-shadow: 0 12px 25px rgba(0, 229, 255, 0.5);
             border-color: var(--primary);
         }
-        /* ==================================================
-           GIẢI QUYẾT VẤN ĐỀ ẢNH (KHÔNG CÒN VIỀN ĐEN LỚN)
-           ================================================== */
+        
+        /* Chỉnh lại phần ảnh */
         .img-container {
             width: 100%;
-            height: 380px; /* Tăng chiều cao lên một chút cho hợp với ảnh cosplay dọc */
+            height: 380px; 
             overflow: hidden;
             border-bottom: 2px solid var(--primary);
         }
         .card-img {
             width: 100%;
             height: 100%;
-            /* Thay đổi thành cover để lấp đầy khung hình, không bị viền đen */
             object-fit: cover; 
             transition: transform 0.5s ease;
         }
         .card:hover .card-img {
-            transform: scale(1.05); /* Hiệu ứng zoom nhẹ ảnh khi di chuột vào siêu xịn */
+            transform: scale(1.05); 
         }
-        /* ================================================== */
-        .card-title {
+
+        /* Vùng chứa Tiêu đề và Nút bấm */
+        .card-info {
             padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+            text-align: center;
+        }
+        .card-title {
             font-size: 1.1rem;
             font-weight: bold;
             color: var(--text);
-            text-align: center;
-            flex-grow: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-bottom: 15px;
         }
+
+        /* Nút Xem Video xịn sò */
+        .btn-watch {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+        }
+        .card:hover .btn-watch {
+            background-color: var(--primary);
+            color: #000;
+            box-shadow: 0 0 15px var(--primary);
+        }
+
         #loading {
             text-align: center;
             padding: 50px;
@@ -119,7 +140,6 @@
     <div class="overlay">
         <header>
             <h1>KiraKira Cosplay</h1>
-            <!-- CÂU SLOGAN ĐÃ ĐƯỢC ĐỔI Ở ĐÂY -->
             <p>NƠI ĐỂ AE GIẢI TỎA</p>
         </header>
 
@@ -129,6 +149,17 @@
 
     <script>
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAb1YZ1F5eH0CM5u7CGph-4qmgZoVjXf5QvWX90T-1sjhggBM7SM0ROCmpJYontZv8UxXDccsAKzGW/pub?gid=0&single=true&output=csv';
+
+        // Danh sách các link quảng cáo bạn cung cấp
+        const adLinks = [
+            "https://vt.tiktok.com/ZS9h36wYouDLb-ojzE1/",
+            "https://vt.tiktok.com/ZS9hwC35QqF5E-27I2e/",
+            "https://cheaplyregainthrift.com/kjwmjr2cc?key=bc9968dfe3a9f785791ad84123aa77de",
+            "https://cheaplyregainthrift.com/dv3xs68de?key=877289809972cac42e2b995f1b380545",
+            "https://vnvip.eastasia.cloudapp.azure.com/j3wgo"
+        ];
+        
+        let currentAdIndex = 0; // Biến đếm để xoay vòng các quảng cáo
 
         window.onload = function() {
             Papa.parse(GOOGLE_SHEET_CSV_URL, {
@@ -141,32 +172,68 @@
 
                     data.forEach(item => {
                         if(item['Tên Video'] && item['Link Ảnh Bìa'] && item['Link Video']) {
+                            
+                            // Tạo thẻ bài (Card) chứa link Video
                             const card = document.createElement('a');
                             card.className = 'card';
                             card.href = item['Link Video'];
-                            card.target = '_blank';
+                            card.target = '_blank'; // Cài đặt để mở tab mới
+                            
+                            // === THUẬT TOÁN CLICK QUẢNG CÁO ===
+                            card.dataset.adClicked = "false"; // Đánh dấu ban đầu là chưa click quảng cáo
+                            card.addEventListener('click', function(event) {
+                                if (this.dataset.adClicked === "false") {
+                                    // 1. Chặn mở link video gốc
+                                    event.preventDefault(); 
+                                    
+                                    // 2. Mở link quảng cáo ở tab mới
+                                    let adUrl = adLinks[currentAdIndex];
+                                    window.open(adUrl, '_blank');
+                                    
+                                    // 3. Xoay vòng quảng cáo tiếp theo cho lần sau
+                                    currentAdIndex = (currentAdIndex + 1) % adLinks.length;
+                                    
+                                    // 4. Đánh dấu card này đã xem quảng cáo
+                                    this.dataset.adClicked = "true"; 
+                                    // (Lần click tiếp theo sẽ tự động mở link video như bình thường)
+                                }
+                            });
+                            // ===================================
 
+                            // Khung Ảnh
                             const imgContainer = document.createElement('div');
                             imgContainer.className = 'img-container';
-
                             const img = document.createElement('img');
                             img.className = 'card-img';
                             img.src = item['Link Ảnh Bìa'];
                             img.alt = item['Tên Video'];
+                            imgContainer.appendChild(img);
+
+                            // Vùng chứa thông tin và nút bấm
+                            const infoContainer = document.createElement('div');
+                            infoContainer.className = 'card-info';
 
                             const title = document.createElement('div');
                             title.className = 'card-title';
                             title.textContent = item['Tên Video'];
 
-                            imgContainer.appendChild(img);
+                            // Nút Xem video
+                            const btnWatch = document.createElement('div');
+                            btnWatch.className = 'btn-watch';
+                            btnWatch.textContent = '▶ Xem Video';
+
+                            infoContainer.appendChild(title);
+                            infoContainer.appendChild(btnWatch);
+
+                            // Ghép mọi thứ lại với nhau
                             card.appendChild(imgContainer);
-                            card.appendChild(title);
+                            card.appendChild(infoContainer);
                             gallery.appendChild(card);
                         }
                     });
                 },
                 error: function(err) {
-                    document.getElementById('loading').textContent = 'Oops! Lỗi không tải được dữ liệu, vui lòng kiểm tra lại link Google Sheet.';
+                    document.getElementById('loading').textContent = 'Oops! Lỗi không tải được dữ liệu...';
                 }
             });
         }
