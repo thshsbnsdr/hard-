@@ -1,227 +1,143 @@
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Góc Video Anime xịn xò</title>
+    <title>CosplayVerse - Anime Cosplay Gallery</title>
+    <!-- Dùng thư viện PapaParse để đọc file CSV từ Google Sheet dễ dàng hơn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
-        /* === 1. THAY HÌNH NỀN ANIME Ở ĐÂY === */
+        :root {
+            --primary: #ff007f;
+            --bg-color: #0f0f13;
+            --card-bg: #1c1c24;
+            --text: #ffffff;
+        }
         body {
             margin: 0;
-            padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Thay link ảnh nền anime của bạn vào giữa dấu ' ' bên dưới */
-            background-image: url('https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1920&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #fff;
+            background-color: var(--bg-color);
+            color: var(--text);
         }
-
-        .overlay {
-            background-color: rgba(0, 0, 0, 0.45);
-            min-height: 100vh;
-            padding: 20px;
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(180deg, rgba(255,0,127,0.2) 0%, var(--bg-color) 100%);
         }
-
         header h1 {
-            text-align: center;
-            font-size: 2.8em;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-            margin: 10px 0 25px 0;
+            font-size: 3rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--primary);
+            text-shadow: 0 0 15px var(--primary);
         }
-
-        /* === KHU VỰC QUẢNG CÁO TỰ ĐỘNG TỪ GOOGLE SHEETS === */
-        .ad-container {
-            max-width: 800px;
-            margin: 0 auto 30px auto;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            border-radius: 12px;
-            padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        header p {
+            color: #aaa;
+            font-size: 1.2rem;
         }
-
-        .ad-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        /* === LƯỚI VIDEO GLASSMORPHISM === */
-        .video-grid {
+        /* Grid chứa video */
+        .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px 50px;
             max-width: 1200px;
             margin: 0 auto;
         }
-
-        .video-card {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+        /* Card thiết kế xịn sò */
+        .card {
+            background-color: var(--card-bg);
             border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            transition: transform 0.3s ease, background 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            text-decoration: none; /* Bỏ gạch chân link */
         }
-
-        .video-card:hover {
-            transform: translateY(-8px);
-            background: rgba(255, 255, 255, 0.25);
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255,0,127,0.3);
         }
-
-        .video-thumbnail {
+        .card-img {
             width: 100%;
-            height: 180px;
+            height: 400px;
             object-fit: cover;
+            border-bottom: 2px solid var(--primary);
         }
-
-        .video-title {
-            padding: 12px 15px;
-            font-size: 1.1em;
+        .card-title {
+            padding: 15px;
+            font-size: 1.1rem;
             font-weight: bold;
+            color: var(--text);
             text-align: center;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
         }
-
-        /* === KHUNG POPUP XEM VIDEO TRỰC TIẾP === */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            position: relative;
-            width: 90%;
-            max-width: 800px;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-
-        .modal-content iframe {
-            width: 100%;
-            height: 450px;
-            border: none;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px; right: 15px;
-            color: #fff;
-            font-size: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 1001;
+        /* Màn hình loading */
+        #loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.5rem;
+            color: var(--primary);
         }
     </style>
 </head>
 <body>
-    <div class="overlay">
-        <header>
-            <h1>Thư Viện Video Anime</h1>
-        </header>
 
-        <div class="ad-container" id="ad-box">
-            <p style="margin:0; color:#ccc;">Đang tải quảng cáo...</p>
-        </div>
+    <header>
+        <h1>CosplayVerse</h1>
+        <p>Thế Giới Anime Cosplay Trong Tầm Tay Bạn</p>
+    </header>
 
-        <div class="video-grid" id="video-container">
-            <p style="text-align:center;">Đang tải danh sách video...</p>
-        </div>
-    </div>
-
-    <div class="modal" id="video-modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeVideo()">&times;</span>
-            <iframe id="video-player" src="" allowfullscreen></iframe>
-        </div>
+    <div id="loading">Đang tải dữ liệu từ Google Sheets...</div>
+    <div id="video-gallery" class="gallery">
+        <!-- Dữ liệu từ Google Sheet sẽ được đẩy vào đây -->
     </div>
 
     <script>
-        // === 2. DÁN LINK CSV GOOGLE SHEETS CỦA BẠN VÀO BÊN DƯỚI ===
-        const sheetCsvUrl = 'DÁN_LINK_CSV_GOOGLE_SHEETS_CỦA_BẠN_VÀO_ĐÂY';
+        // === BẠN HÃY DÁN LINK GOOGLE SHEET (ĐUÔI CSV) VÀO ĐÂY ===
+        const GOOGLE_SHEET_CSV_URL = 'DÁN_LINK_CSV_CỦA_BẠN_VÀO_ĐÂY';
 
-        async function loadContent() {
-            try {
-                const response = await fetch(sheetCsvUrl);
-                const data = await response.text();
-                
-                const rows = data.split('\n').slice(1);
-                const container = document.getElementById('video-container');
-                const adBox = document.getElementById('ad-box');
-                
-                container.innerHTML = '';
-                let firstAdUrl = '';
+        function loadData() {
+            Papa.parse(GOOGLE_SHEET_CSV_URL, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    const data = results.data;
+                    const gallery = document.getElementById('video-gallery');
+                    document.getElementById('loading').style.display = 'none';
 
-                rows.forEach(row => {
-                    const columns = row.split(',');
-                    if (columns.length >= 3) {
-                        const title = columns[0] ? columns[0].trim() : '';
-                        const thumbnail = columns[1] ? columns[1].trim() : '';
-                        const videoEmbedUrl = columns[2] ? columns[2].trim() : '';
-                        const adUrl = columns[3] ? columns[3].trim() : '';
+                    data.forEach(item => {
+                        // Kiểm tra nếu dòng có dữ liệu mới hiển thị
+                        if(item['Tên Video'] && item['Link Ảnh Bìa'] && item['Link Video']) {
+                            // Tạo thẻ a chứa video
+                            const card = document.createElement('a');
+                            card.className = 'card';
+                            card.href = item['Link Video'];
+                            card.target = '_blank'; // Mở video ở tab mới
 
-                        // Lưu ảnh quảng cáo ở hàng đầu tiên có dữ liệu
-                        if (adUrl && !firstAdUrl) {
-                            firstAdUrl = adUrl;
+                            // Tạo ảnh bìa
+                            const img = document.createElement('img');
+                            img.className = 'card-img';
+                            img.src = item['Link Ảnh Bìa'];
+                            img.alt = item['Tên Video'];
+
+                            // Tạo tiêu đề
+                            const title = document.createElement('div');
+                            title.className = 'card-title';
+                            title.textContent = item['Tên Video'];
+
+                            // Ghép vào card
+                            card.appendChild(img);
+                            card.appendChild(title);
+                            gallery.appendChild(card);
                         }
-
-                        if (title && videoEmbedUrl) {
-                            const card = document.createElement('div');
-                            card.className = 'video-card';
-                            card.onclick = () => openVideo(videoEmbedUrl);
-                            card.innerHTML = `
-                                <img src="${thumbnail}" alt="${title}" class="video-thumbnail">
-                                <div class="video-title">${title}</div>
-                            `;
-                            container.appendChild(card);
-                        }
-                    }
-                });
-
-                // Hiển thị quảng cáo nếu có trong Google Sheets
-                if (firstAdUrl) {
-                    adBox.innerHTML = `<img src="${firstAdUrl}" alt="Quảng cáo">`;
-                } else {
-                    adBox.style.display = 'none'; // Bỏ khung quảng cáo nếu không điền link
+                    });
                 }
-
-            } catch (error) {
-                console.error('Lỗi:', error);
-            }
+            });
         }
 
-        // Bật cửa sổ xem Video
-        function openVideo(url) {
-            const modal = document.getElementById('video-modal');
-            const player = document.getElementById('video-player');
-            player.src = url;
-            modal.style.display = 'flex';
-        }
-
-        // Tắt cửa sổ xem Video
-        function closeVideo() {
-            const modal = document.getElementById('video-modal');
-            const player = document.getElementById('video-player');
-            player.src = '';
-            modal.style.display = 'none';
-        }
-
-        // Tải nội dung khi mở trang web
-        loadContent();
+        // Chạy hàm khi trang web tải xong
+        window.onload = loadData;
     </script>
 </body>
 </html>
