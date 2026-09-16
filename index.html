@@ -3,40 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CosplayVerse - Anime Cosplay Gallery</title>
-    <!-- Dùng thư viện PapaParse để đọc file CSV từ Google Sheet dễ dàng hơn -->
+    <title>KiraKira Cosplay - Thế Giới Anime</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
-            --primary: #ff007f;
-            --bg-color: #0f0f13;
-            --card-bg: #1c1c24;
+            /* Đổi màu chủ đạo sang xanh neon cực ngầu */
+            --primary: #00e5ff; 
+            --card-bg: rgba(28, 28, 36, 0.7);
             --text: #ffffff;
         }
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            /* === ẢNH NỀN CỦA TRANG WEB === */
+            background-image: url('https://images.unsplash.com/photo-1618336753974-aae8e0450654?q=80&w=2070&auto=format&fit=crop'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Giữ nền đứng yên khi cuộn chuột */
             color: var(--text);
+        }
+        /* Lớp phủ làm tối ảnh nền một chút để video và chữ nổi bật hơn */
+        .overlay {
+            background-color: rgba(10, 10, 15, 0.85);
+            min-height: 100vh;
+            padding-bottom: 50px;
         }
         header {
             text-align: center;
-            padding: 50px 20px;
-            background: linear-gradient(180deg, rgba(255,0,127,0.2) 0%, var(--bg-color) 100%);
+            padding: 60px 20px 40px;
         }
         header h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin: 0;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--primary);
-            text-shadow: 0 0 15px var(--primary);
+            letter-spacing: 4px;
+            color: var(--text);
+            /* Hiệu ứng chữ phát sáng */
+            text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
         }
         header p {
-            color: #aaa;
+            color: #ccc;
             font-size: 1.2rem;
+            margin-top: 10px;
         }
-        /* Grid chứa video */
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -45,26 +54,42 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        /* Card thiết kế xịn sò */
+        /* Giao diện thẻ video */
         .card {
             background-color: var(--card-bg);
             border-radius: 15px;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            text-decoration: none; /* Bỏ gạch chân link */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.7);
+            text-decoration: none;
+            backdrop-filter: blur(10px); /* Hiệu ứng kính mờ cho background card */
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(255,0,127,0.3);
+            box-shadow: 0 15px 30px rgba(0, 229, 255, 0.4);
+            border-color: var(--primary);
         }
-        .card-img {
+        /* ==================================================
+           GIẢI QUYẾT VẤN ĐỀ ẢNH NGANG/DỌC (KHÔNG BỊ CẮT)
+           ================================================== */
+        .img-container {
             width: 100%;
-            height: 400px;
-            object-fit: cover;
+            height: 350px; /* Chiều cao cố định */
+            background-color: #000; /* Khoảng trống sẽ có màu đen rất sang */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-bottom: 2px solid var(--primary);
         }
+        .card-img {
+            max-width: 100%;
+            max-height: 100%;
+            /* Object-fit contain giúp ảnh hiển thị toàn bộ dù ngang hay dọc */
+            object-fit: contain; 
+        }
+        /* ================================================== */
         .card-title {
             padding: 15px;
             font-size: 1.1rem;
@@ -72,32 +97,32 @@
             color: var(--text);
             text-align: center;
         }
-        /* Màn hình loading */
         #loading {
             text-align: center;
             padding: 50px;
             font-size: 1.5rem;
             color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
         }
     </style>
 </head>
 <body>
+    <div class="overlay">
+        <header>
+            <!-- BẠN CÓ THỂ ĐỔI TÊN WEB Ở DÒNG DƯỚI NÀY -->
+            <h1>KiraKira Cosplay</h1>
+            <p>Nơi Tôn Vinh Nghệ Thuật Cosplay</p>
+        </header>
 
-    <header>
-        <h1>CosplayVerse</h1>
-        <p>Thế Giới Anime Cosplay Trong Tầm Tay Bạn</p>
-    </header>
-
-    <div id="loading">Đang tải dữ liệu từ Google Sheets...</div>
-    <div id="video-gallery" class="gallery">
-        <!-- Dữ liệu từ Google Sheet sẽ được đẩy vào đây -->
+        <div id="loading">Đang tải dữ liệu, chờ một chút nhé...</div>
+        <div id="video-gallery" class="gallery"></div>
     </div>
 
     <script>
-        // === BẠN HÃY DÁN LINK GOOGLE SHEET (ĐUÔI CSV) VÀO ĐÂY ===
-        const GOOGLE_SHEET_CSV_URL = 'DÁN_LINK_CSV_CỦA_BẠN_VÀO_ĐÂY';
+        // Link Google Sheet của bạn đã được gắn vào đây
+        const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAb1YZ1F5eH0CM5u7CGph-4qmgZoVjXf5QvWX90T-1sjhggBM7SM0ROCmpJYontZv8UxXDccsAKzGW/pub?gid=0&single=true&output=csv';
 
-        function loadData() {
+        window.onload = function() {
             Papa.parse(GOOGLE_SHEET_CSV_URL, {
                 download: true,
                 header: true,
@@ -107,37 +132,38 @@
                     document.getElementById('loading').style.display = 'none';
 
                     data.forEach(item => {
-                        // Kiểm tra nếu dòng có dữ liệu mới hiển thị
+                        // Kiểm tra tên cột phải khớp y hệt trong Google Sheet
                         if(item['Tên Video'] && item['Link Ảnh Bìa'] && item['Link Video']) {
-                            // Tạo thẻ a chứa video
                             const card = document.createElement('a');
                             card.className = 'card';
                             card.href = item['Link Video'];
-                            card.target = '_blank'; // Mở video ở tab mới
+                            card.target = '_blank';
 
-                            // Tạo ảnh bìa
+                            // Tạo khung chứa ảnh để tối ưu kích thước
+                            const imgContainer = document.createElement('div');
+                            imgContainer.className = 'img-container';
+
                             const img = document.createElement('img');
                             img.className = 'card-img';
                             img.src = item['Link Ảnh Bìa'];
                             img.alt = item['Tên Video'];
 
-                            // Tạo tiêu đề
                             const title = document.createElement('div');
                             title.className = 'card-title';
                             title.textContent = item['Tên Video'];
 
-                            // Ghép vào card
-                            card.appendChild(img);
+                            imgContainer.appendChild(img);
+                            card.appendChild(imgContainer);
                             card.appendChild(title);
                             gallery.appendChild(card);
                         }
                     });
+                },
+                error: function(err) {
+                    document.getElementById('loading').textContent = 'Oops! Lỗi không tải được dữ liệu, vui lòng kiểm tra lại link Google Sheet.';
                 }
             });
         }
-
-        // Chạy hàm khi trang web tải xong
-        window.onload = loadData;
     </script>
 </body>
 </html>
