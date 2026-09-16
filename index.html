@@ -7,24 +7,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
-            /* Đổi màu chủ đạo sang xanh neon cực ngầu */
+            /* Màu chủ đạo xanh neon */
             --primary: #00e5ff; 
-            --card-bg: rgba(28, 28, 36, 0.7);
+            --card-bg: rgba(20, 20, 25, 0.85);
             --text: #ffffff;
         }
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* === ẢNH NỀN CỦA TRANG WEB === */
-            background-image: url('https://images.unsplash.com/photo-1618336753974-aae8e0450654?q=80&w=2070&auto=format&fit=crop'); 
+            /* === ẢNH NỀN BẠN YÊU CẦU ĐÃ ĐƯỢC THÊM VÀO ĐÂY === */
+            background-image: url('https://i.postimg.cc/gcN7Dnwp/images.jpg'); 
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Giữ nền đứng yên khi cuộn chuột */
+            background-attachment: fixed;
             color: var(--text);
         }
-        /* Lớp phủ làm tối ảnh nền một chút để video và chữ nổi bật hơn */
+        /* Lớp phủ làm tối ảnh nền một chút để chữ dễ đọc hơn */
         .overlay {
-            background-color: rgba(10, 10, 15, 0.85);
+            background-color: rgba(0, 0, 0, 0.6);
             min-height: 100vh;
             padding-bottom: 50px;
         }
@@ -38,56 +38,61 @@
             text-transform: uppercase;
             letter-spacing: 4px;
             color: var(--text);
-            /* Hiệu ứng chữ phát sáng */
             text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
         }
         header p {
-            color: #ccc;
-            font-size: 1.2rem;
+            color: #00e5ff;
+            font-size: 1.3rem;
             margin-top: 10px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px;
             padding: 20px 50px;
             max-width: 1200px;
             margin: 0 auto;
         }
-        /* Giao diện thẻ video */
+        /* Giao diện thẻ video (Card) */
         .card {
             background-color: var(--card-bg);
-            border-radius: 15px;
+            border-radius: 12px;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.7);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
             text-decoration: none;
-            backdrop-filter: blur(10px); /* Hiệu ứng kính mờ cho background card */
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            display: flex;
+            flex-direction: column;
         }
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 229, 255, 0.4);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 229, 255, 0.5);
             border-color: var(--primary);
         }
         /* ==================================================
-           GIẢI QUYẾT VẤN ĐỀ ẢNH NGANG/DỌC (KHÔNG BỊ CẮT)
+           GIẢI QUYẾT VẤN ĐỀ ẢNH (KHÔNG CÒN VIỀN ĐEN LỚN)
            ================================================== */
         .img-container {
             width: 100%;
-            height: 350px; /* Chiều cao cố định */
-            background-color: #000; /* Khoảng trống sẽ có màu đen rất sang */
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            height: 380px; /* Tăng chiều cao lên một chút cho hợp với ảnh cosplay dọc */
+            overflow: hidden;
             border-bottom: 2px solid var(--primary);
         }
         .card-img {
-            max-width: 100%;
-            max-height: 100%;
-            /* Object-fit contain giúp ảnh hiển thị toàn bộ dù ngang hay dọc */
-            object-fit: contain; 
+            width: 100%;
+            height: 100%;
+            /* Thay đổi thành cover để lấp đầy khung hình, không bị viền đen */
+            object-fit: cover; 
+            transition: transform 0.5s ease;
+        }
+        .card:hover .card-img {
+            transform: scale(1.05); /* Hiệu ứng zoom nhẹ ảnh khi di chuột vào siêu xịn */
         }
         /* ================================================== */
         .card-title {
@@ -96,6 +101,10 @@
             font-weight: bold;
             color: var(--text);
             text-align: center;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         #loading {
             text-align: center;
@@ -109,17 +118,16 @@
 <body>
     <div class="overlay">
         <header>
-            <!-- BẠN CÓ THỂ ĐỔI TÊN WEB Ở DÒNG DƯỚI NÀY -->
             <h1>KiraKira Cosplay</h1>
-            <p>Nơi Tôn Vinh Nghệ Thuật Cosplay</p>
+            <!-- CÂU SLOGAN ĐÃ ĐƯỢC ĐỔI Ở ĐÂY -->
+            <p>NƠI ĐỂ AE GIẢI TỎA</p>
         </header>
 
-        <div id="loading">Đang tải dữ liệu, chờ một chút nhé...</div>
+        <div id="loading">Đang tải dữ liệu, ae chờ chút nhé...</div>
         <div id="video-gallery" class="gallery"></div>
     </div>
 
     <script>
-        // Link Google Sheet của bạn đã được gắn vào đây
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAb1YZ1F5eH0CM5u7CGph-4qmgZoVjXf5QvWX90T-1sjhggBM7SM0ROCmpJYontZv8UxXDccsAKzGW/pub?gid=0&single=true&output=csv';
 
         window.onload = function() {
@@ -132,14 +140,12 @@
                     document.getElementById('loading').style.display = 'none';
 
                     data.forEach(item => {
-                        // Kiểm tra tên cột phải khớp y hệt trong Google Sheet
                         if(item['Tên Video'] && item['Link Ảnh Bìa'] && item['Link Video']) {
                             const card = document.createElement('a');
                             card.className = 'card';
                             card.href = item['Link Video'];
                             card.target = '_blank';
 
-                            // Tạo khung chứa ảnh để tối ưu kích thước
                             const imgContainer = document.createElement('div');
                             imgContainer.className = 'img-container';
 
