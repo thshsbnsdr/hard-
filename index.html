@@ -12,23 +12,24 @@
             --text: #ffffff;
         }
         
-        /* === HỆ THỐNG HÌNH NỀN THÔNG MINH === */
+        /* === HỆ THỐNG HÌNH NỀN ÉP CỨNG (SỬA LỖI PC HIỆN NỀN MOBILE) === */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Ảnh nền cho MÁY TÍNH (PC) */
-            background-image: url('https://i.postimg.cc/d0YTzXtY/images.jpg'); 
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             color: var(--text);
             overflow-x: hidden;
+            
+            /* Mặc định lấy ảnh DỌC cho ĐIỆN THOẠI */
+            background-image: url('https://i.postimg.cc/ZqYZf0PJ/snapedit-1789566091564.jpg'); 
         }
 
-        /* Ảnh nền cho ĐIỆN THOẠI (Mobile) */
-        @media (max-width: 768px) {
+        /* ÉP CỨNG: Nếu màn hình lớn hơn 768px (MÁY TÍNH / LAPTOP) thì CHẮC CHẮN dùng ảnh NGANG */
+        @media (min-width: 769px) {
             body {
-                background-image: url('https://i.postimg.cc/ZqYZf0PJ/snapedit-1789566091564.jpg'); 
+                background-image: url('https://i.postimg.cc/d0YTzXtY/images.jpg') !important; 
             }
         }
         /* ==================================== */
@@ -39,7 +40,6 @@
             padding-bottom: 50px;
         }
 
-        /* Hiệu ứng nhấp nháy Neon cho tiêu đề */
         @keyframes neonPulse {
             0%, 100% { text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary); }
             50% { text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary), 0 0 60px var(--primary); }
@@ -52,7 +52,7 @@
             text-transform: uppercase;
             letter-spacing: 4px;
             color: var(--text);
-            animation: neonPulse 2s infinite; /* Thêm hiệu ứng nhấp nháy */
+            animation: neonPulse 2s infinite; 
         }
         header p {
             color: #00e5ff; font-size: 1.3rem; margin-top: 10px;
@@ -68,7 +68,6 @@
             margin: 0 auto;
         }
 
-        /* === HIỆU ỨNG THẺ BÀI XUẤT HIỆN TỪ TỪ === */
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
         }
@@ -85,8 +84,6 @@
             border: 1px solid rgba(0, 229, 255, 0.2);
             display: flex;
             flex-direction: column;
-            
-            /* Trạng thái ban đầu trước khi load */
             opacity: 0; 
             transform: translateY(30px);
             animation: fadeInUp 0.6s ease forwards;
@@ -114,7 +111,7 @@
 
         #loading { text-align: center; padding: 50px; font-size: 1.5rem; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
 
-        /* === POPUP THÔNG BÁO XỊN SÒ === */
+        /* === POPUP THÔNG BÁO === */
         @keyframes popIn {
             0% { transform: scale(0.5); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
@@ -135,11 +132,11 @@
             backdrop-filter: blur(10px);
         }
         .close-btn {
-            position: absolute; top: 5px; right: 15px;
+            position: absolute; top: -5px; right: 10px;
             font-size: 35px; color: #fff; cursor: pointer; font-weight: bold; transition: 0.2s;
         }
         .close-btn:hover { color: #ff0055; transform: scale(1.2); }
-        .popup-img { width: 100%; border-radius: 10px; margin-bottom: 10px; object-fit: cover; }
+        .popup-img { width: 100%; border-radius: 10px; margin-bottom: 10px; object-fit: contain; max-height: 250px; }
         .popup-content h3 { color: var(--primary); margin: 10px 0; text-transform: uppercase; }
         .popup-content p { font-size: 0.95rem; color: #ccc; margin-bottom: 0; }
     </style>
@@ -150,8 +147,8 @@
     <div id="popup-overlay">
         <div class="popup-content">
             <span class="close-btn" onclick="closePopup()">&times;</span>
-            <!-- Bạn có thể thay link ảnh thông báo ở đây -->
-            <img src="https://i.postimg.cc/ZqYZf0PJ/snapedit-1789566091564.jpg" alt="Thông báo" class="popup-img">
+            <!-- ẢNH THÔNG BÁO MỚI ĐÃ ĐƯỢC CẬP NHẬT TẠI ĐÂY -->
+            <img src="https://i.postimg.cc/RFnq2cJM/315c2199-764b-4a62-b467-99c3a42ad7e9.png" alt="Thông báo" class="popup-img">
             <h3>Chào mừng AE!</h3>
             <p>Chúc anh em có những phút giây giải tỏa vui vẻ tại KiraKira. Đừng quên click xem video nhé!</p>
         </div>
@@ -168,12 +165,11 @@
     </div>
 
     <script>
-        // HÀM TẮT POPUP
         function closePopup() {
             document.getElementById('popup-overlay').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('popup-overlay').style.display = 'none';
-            }, 300); // Đợi 0.3s cho mượt rồi mới ẩn hẳn
+            }, 300); 
         }
 
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAb1YZ1F5eH0CM5u7CGph-4qmgZoVjXf5QvWX90T-1sjhggBM7SM0ROCmpJYontZv8UxXDccsAKzGW/pub?gid=0&single=true&output=csv';
@@ -197,7 +193,7 @@
                     const gallery = document.getElementById('video-gallery');
                     document.getElementById('loading').style.display = 'none';
                     
-                    let cardIndex = 0; // Biến đếm để làm hiệu ứng xuất hiện lần lượt
+                    let cardIndex = 0; 
 
                     data.forEach(item => {
                         if(item['Tên Video'] && item['Link Ảnh Bìa'] && item['Link Video']) {
@@ -207,7 +203,6 @@
                             card.href = item['Link Video'];
                             card.target = '_blank'; 
                             
-                            // Thêm độ trễ để các thẻ bài hiện lên lần lượt (0.1s, 0.2s, 0.3s...)
                             card.style.animationDelay = `${cardIndex * 0.1}s`;
                             cardIndex++;
                             
