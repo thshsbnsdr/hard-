@@ -7,45 +7,58 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
-            var(--primary): #00e5ff; 
             --primary: #00e5ff;
             --card-bg: rgba(20, 20, 25, 0.85);
             --text: #ffffff;
         }
+        
+        /* === HỆ THỐNG HÌNH NỀN THÔNG MINH === */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: url('https://i.postimg.cc/ZqYZf0PJ/snapedit-1789566091564.jpg'); 
+            /* Ảnh nền cho MÁY TÍNH (PC) */
+            background-image: url('https://i.postimg.cc/d0YTzXtY/images.jpg'); 
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             color: var(--text);
+            overflow-x: hidden;
         }
+
+        /* Ảnh nền cho ĐIỆN THOẠI (Mobile) */
+        @media (max-width: 768px) {
+            body {
+                background-image: url('https://i.postimg.cc/ZqYZf0PJ/snapedit-1789566091564.jpg'); 
+            }
+        }
+        /* ==================================== */
+
         .overlay {
             background-color: rgba(0, 0, 0, 0.6);
             min-height: 100vh;
             padding-bottom: 50px;
         }
-        header {
-            text-align: center;
-            padding: 60px 20px 40px;
+
+        /* Hiệu ứng nhấp nháy Neon cho tiêu đề */
+        @keyframes neonPulse {
+            0%, 100% { text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary); }
+            50% { text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary), 0 0 60px var(--primary); }
         }
+
+        header { text-align: center; padding: 60px 20px 40px; }
         header h1 {
             font-size: 3.5rem;
             margin: 0;
             text-transform: uppercase;
             letter-spacing: 4px;
             color: var(--text);
-            text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            animation: neonPulse 2s infinite; /* Thêm hiệu ứng nhấp nháy */
         }
         header p {
-            color: #00e5ff;
-            font-size: 1.3rem;
-            margin-top: 10px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            color: #00e5ff; font-size: 1.3rem; margin-top: 10px;
+            font-weight: bold; letter-spacing: 2px; text-transform: uppercase;
         }
+
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -54,7 +67,12 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        /* Card Styles */
+
+        /* === HIỆU ỨNG THẺ BÀI XUẤT HIỆN TỪ TỪ === */
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .card {
             background-color: var(--card-bg);
             border-radius: 12px;
@@ -67,76 +85,78 @@
             border: 1px solid rgba(0, 229, 255, 0.2);
             display: flex;
             flex-direction: column;
+            
+            /* Trạng thái ban đầu trước khi load */
+            opacity: 0; 
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
         }
         .card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-8px) scale(1.02);
             box-shadow: 0 12px 25px rgba(0, 229, 255, 0.5);
             border-color: var(--primary);
         }
         
-        /* Chỉnh lại phần ảnh */
-        .img-container {
-            width: 100%;
-            height: 380px; 
-            overflow: hidden;
-            border-bottom: 2px solid var(--primary);
-        }
-        .card-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; 
-            transition: transform 0.5s ease;
-        }
-        .card:hover .card-img {
-            transform: scale(1.05); 
-        }
+        .img-container { width: 100%; height: 380px; overflow: hidden; border-bottom: 2px solid var(--primary); }
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .card:hover .card-img { transform: scale(1.08); }
 
-        /* Vùng chứa Tiêu đề và Nút bấm */
-        .card-info {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            flex-grow: 1;
-            text-align: center;
-        }
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--text);
-            margin-bottom: 15px;
-        }
+        .card-info { padding: 15px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; text-align: center; }
+        .card-title { font-size: 1.1rem; font-weight: bold; color: var(--text); margin-bottom: 15px; }
 
-        /* Nút Xem Video xịn sò */
         .btn-watch {
-            display: inline-block;
-            background-color: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+            display: inline-block; background-color: transparent; color: var(--primary);
+            border: 2px solid var(--primary); padding: 10px 20px; border-radius: 25px;
+            font-weight: bold; text-transform: uppercase; font-size: 0.9rem;
+            transition: all 0.3s ease; box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
         }
-        .card:hover .btn-watch {
-            background-color: var(--primary);
-            color: #000;
-            box-shadow: 0 0 15px var(--primary);
-        }
+        .card:hover .btn-watch { background-color: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
 
-        #loading {
-            text-align: center;
-            padding: 50px;
-            font-size: 1.5rem;
-            color: var(--primary);
-            text-shadow: 0 0 10px var(--primary);
+        #loading { text-align: center; padding: 50px; font-size: 1.5rem; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+
+        /* === POPUP THÔNG BÁO XỊN SÒ === */
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
+        #popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.3s ease;
+        }
+        .popup-content {
+            background: rgba(20, 20, 25, 0.95);
+            border: 2px solid var(--primary); border-radius: 15px;
+            padding: 20px; text-align: center; position: relative;
+            max-width: 90%; width: 350px;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+        .close-btn {
+            position: absolute; top: 5px; right: 15px;
+            font-size: 35px; color: #fff; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .close-btn:hover { color: #ff0055; transform: scale(1.2); }
+        .popup-img { width: 100%; border-radius: 10px; margin-bottom: 10px; object-fit: cover; }
+        .popup-content h3 { color: var(--primary); margin: 10px 0; text-transform: uppercase; }
+        .popup-content p { font-size: 0.95rem; color: #ccc; margin-bottom: 0; }
     </style>
 </head>
 <body>
+    
+    <!-- KHUNG POPUP THÔNG BÁO -->
+    <div id="popup-overlay">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <!-- Bạn có thể thay link ảnh thông báo ở đây -->
+            <img src="https://i.postimg.cc/ZqYZf0PJ/snapedit-1789566091564.jpg" alt="Thông báo" class="popup-img">
+            <h3>Chào mừng AE!</h3>
+            <p>Chúc anh em có những phút giây giải tỏa vui vẻ tại KiraKira. Đừng quên click xem video nhé!</p>
+        </div>
+    </div>
+
     <div class="overlay">
         <header>
             <h1>KiraKira Cosplay</h1>
@@ -148,9 +168,16 @@
     </div>
 
     <script>
+        // HÀM TẮT POPUP
+        function closePopup() {
+            document.getElementById('popup-overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('popup-overlay').style.display = 'none';
+            }, 300); // Đợi 0.3s cho mượt rồi mới ẩn hẳn
+        }
+
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAb1YZ1F5eH0CM5u7CGph-4qmgZoVjXf5QvWX90T-1sjhggBM7SM0ROCmpJYontZv8UxXDccsAKzGW/pub?gid=0&single=true&output=csv';
 
-        // Danh sách các link quảng cáo bạn cung cấp
         const adLinks = [
             "https://vt.tiktok.com/ZS9h36wYouDLb-ojzE1/",
             "https://vt.tiktok.com/ZS9hwC35QqF5E-27I2e/",
@@ -159,7 +186,7 @@
             "https://vnvip.eastasia.cloudapp.azure.com/j3wgo"
         ];
         
-        let currentAdIndex = 0; // Biến đếm để xoay vòng các quảng cáo
+        let currentAdIndex = 0;
 
         window.onload = function() {
             Papa.parse(GOOGLE_SHEET_CSV_URL, {
@@ -169,38 +196,32 @@
                     const data = results.data;
                     const gallery = document.getElementById('video-gallery');
                     document.getElementById('loading').style.display = 'none';
+                    
+                    let cardIndex = 0; // Biến đếm để làm hiệu ứng xuất hiện lần lượt
 
                     data.forEach(item => {
                         if(item['Tên Video'] && item['Link Ảnh Bìa'] && item['Link Video']) {
                             
-                            // Tạo thẻ bài (Card) chứa link Video
                             const card = document.createElement('a');
                             card.className = 'card';
                             card.href = item['Link Video'];
-                            card.target = '_blank'; // Cài đặt để mở tab mới
+                            card.target = '_blank'; 
                             
-                            // === THUẬT TOÁN CLICK QUẢNG CÁO ===
-                            card.dataset.adClicked = "false"; // Đánh dấu ban đầu là chưa click quảng cáo
+                            // Thêm độ trễ để các thẻ bài hiện lên lần lượt (0.1s, 0.2s, 0.3s...)
+                            card.style.animationDelay = `${cardIndex * 0.1}s`;
+                            cardIndex++;
+                            
+                            card.dataset.adClicked = "false"; 
                             card.addEventListener('click', function(event) {
                                 if (this.dataset.adClicked === "false") {
-                                    // 1. Chặn mở link video gốc
                                     event.preventDefault(); 
-                                    
-                                    // 2. Mở link quảng cáo ở tab mới
                                     let adUrl = adLinks[currentAdIndex];
                                     window.open(adUrl, '_blank');
-                                    
-                                    // 3. Xoay vòng quảng cáo tiếp theo cho lần sau
                                     currentAdIndex = (currentAdIndex + 1) % adLinks.length;
-                                    
-                                    // 4. Đánh dấu card này đã xem quảng cáo
                                     this.dataset.adClicked = "true"; 
-                                    // (Lần click tiếp theo sẽ tự động mở link video như bình thường)
                                 }
                             });
-                            // ===================================
 
-                            // Khung Ảnh
                             const imgContainer = document.createElement('div');
                             imgContainer.className = 'img-container';
                             const img = document.createElement('img');
@@ -209,15 +230,12 @@
                             img.alt = item['Tên Video'];
                             imgContainer.appendChild(img);
 
-                            // Vùng chứa thông tin và nút bấm
                             const infoContainer = document.createElement('div');
                             infoContainer.className = 'card-info';
-
                             const title = document.createElement('div');
                             title.className = 'card-title';
                             title.textContent = item['Tên Video'];
 
-                            // Nút Xem video
                             const btnWatch = document.createElement('div');
                             btnWatch.className = 'btn-watch';
                             btnWatch.textContent = '▶ Xem Video';
@@ -225,7 +243,6 @@
                             infoContainer.appendChild(title);
                             infoContainer.appendChild(btnWatch);
 
-                            // Ghép mọi thứ lại với nhau
                             card.appendChild(imgContainer);
                             card.appendChild(infoContainer);
                             gallery.appendChild(card);
