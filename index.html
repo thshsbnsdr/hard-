@@ -2,27 +2,31 @@
 <html lang="vi" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="referrer" content="no-referrer">
     <title>KiraKira Cosplay - Nơi Để AE Giải Tỏa</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
+        /* === BIẾN MÀU CHO GIAO DIỆN SÁNG === */
         :root {
             --primary: #ff007f;
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --text: #222222;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text: #111111;
             --bg-color-1: #ffe6f2; --bg-color-2: #ffffff; --bg-color-3: #e6f7ff; --bg-color-4: #f3e6ff;
             --title-shadow: 0 0 5px rgba(255, 0, 127, 0.3); --header-text: #222;
             --input-bg: rgba(255, 255, 255, 0.9); --placeholder: #666;
+            --border-color: rgba(255, 0, 127, 0.3);
         }
 
+        /* === BIẾN MÀU CHO GIAO DIỆN TỐI === */
         [data-theme="dark"] {
             --primary: #00e5ff;
-            --card-bg: rgba(20, 20, 25, 0.75);
+            --card-bg: rgba(20, 20, 25, 0.85);
             --text: #ffffff;
             --bg-color-1: #090a0f; --bg-color-2: #1a1a2e; --bg-color-3: #0f3460; --bg-color-4: #16213e;
             --title-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary); --header-text: #ffffff;
             --input-bg: rgba(0, 0, 0, 0.6); --placeholder: #aaa;
+            --border-color: rgba(0, 229, 255, 0.2);
         }
         
         body {
@@ -34,68 +38,97 @@
 
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
+        /* Nút Chuyển Đổi Chế Độ */
         #theme-toggle {
-            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            position: fixed; top: 15px; right: 15px; z-index: 1000;
             background: var(--card-bg); border: 2px solid var(--primary); color: var(--text);
-            padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.1); transition: all 0.3s;
+            padding: 8px 12px; border-radius: 20px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1); transition: all 0.3s; font-size: 0.9rem;
         }
-        #theme-toggle:hover { transform: scale(1.1); background: var(--primary); color: #fff; }
+        #theme-toggle:hover { transform: scale(1.05); background: var(--primary); color: #fff; }
 
         header { text-align: center; padding: 60px 20px 20px; }
         header h1 { font-size: 3.5rem; margin: 0; text-transform: uppercase; letter-spacing: 4px; color: var(--header-text); text-shadow: var(--title-shadow); transition: all 0.5s; }
         header p { color: var(--primary); font-size: 1.2rem; margin-top: 10px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
 
-        .search-container { text-align: center; margin: 20px auto 40px; width: 100%; max-width: 500px; padding: 0 20px; box-sizing: border-box; }
+        .search-container { text-align: center; margin: 10px auto 30px; width: 100%; max-width: 500px; padding: 0 20px; box-sizing: border-box; }
         .search-box {
             width: 100%; padding: 12px 25px; border-radius: 30px; border: 2px solid var(--primary);
-            background: var(--input-bg); color: var(--text); font-size: 1.1rem; outline: none; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: var(--input-bg); color: var(--text); font-size: 1rem; outline: none; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.1); box-sizing: border-box;
         }
-        .search-box::placeholder { color: var(--placeholder); }
         .search-box:focus { box-shadow: 0 0 20px var(--primary); transform: scale(1.02); }
 
-        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding: 0 50px 50px; max-width: 1200px; margin: 0 auto; flex-grow: 1; }
+        /* Lưới Gallery cho PC */
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; padding: 0 40px 40px; max-width: 1200px; margin: 0 auto; flex-grow: 1; }
 
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
         .card {
             background-color: var(--card-bg); border-radius: 12px; overflow: hidden;
             transition: all 0.3s ease; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-            text-decoration: none; backdrop-filter: blur(10px); border: 1px solid rgba(128,128,128,0.2);
+            text-decoration: none; backdrop-filter: blur(10px); border: 1px solid var(--border-color);
             display: flex; flex-direction: column; opacity: 0; transform: translateY(30px); animation: fadeInUp 0.6s ease forwards;
         }
         .card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.25); border-color: var(--primary); }
         
-        .img-container { width: 100%; height: 380px; overflow: hidden; border-bottom: 2px solid var(--primary); background: #111; position: relative; display: flex; justify-content: center; align-items: center;}
+        .img-container { width: 100%; height: 350px; overflow: hidden; border-bottom: 2px solid var(--primary); background: #111; position: relative; display: flex; justify-content: center; align-items: center;}
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
         .card:hover .card-img { transform: scale(1.08); }
 
         .card-info { padding: 15px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; text-align: center; }
-        .card-title { font-size: 1.1rem; font-weight: bold; color: var(--text); margin-bottom: 15px; }
+        .card-title { font-size: 1.05rem; font-weight: bold; color: var(--text); margin-bottom: 15px; line-height: 1.4; }
 
         .btn-watch {
-            display: inline-block; background-color: transparent; color: var(--primary);
-            border: 2px solid var(--primary); padding: 10px 20px; border-radius: 25px;
-            font-weight: bold; text-transform: uppercase; font-size: 0.9rem; transition: all 0.3s ease;
+            display: inline-block; background-color: var(--card-bg); color: var(--primary);
+            border: 2px solid var(--primary); padding: 8px 15px; border-radius: 25px;
+            font-weight: bold; text-transform: uppercase; font-size: 0.85rem; transition: all 0.3s ease;
         }
         .card:hover .btn-watch { background-color: var(--primary); color: #fff; box-shadow: 0 0 15px var(--primary); }
 
-        #loading { text-align: center; padding: 50px; font-size: 1.5rem; color: var(--primary); font-weight: bold;}
+        #loading { text-align: center; padding: 30px; font-size: 1.2rem; color: var(--primary); font-weight: bold;}
 
         footer { text-align: center; padding: 20px; background: var(--card-bg); border-top: 1px solid var(--primary); font-size: 0.9rem; color: var(--text); margin-top: auto; }
         footer span { color: var(--primary); font-weight: bold; }
 
-        #scrollTopBtn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 99; background-color: var(--primary); color: #fff; font-size: 20px; border: none; outline: none; cursor: pointer; padding: 15px; border-radius: 50%; box-shadow: 0 0 15px var(--primary); transition: 0.3s; width: 50px; height: 50px; text-align: center; line-height: 20px; }
+        #scrollTopBtn { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; background-color: var(--primary); color: #fff; font-size: 20px; border: none; outline: none; cursor: pointer; padding: 12px; border-radius: 50%; box-shadow: 0 0 15px var(--primary); transition: 0.3s; width: 45px; height: 45px; text-align: center; line-height: 18px; }
         #scrollTopBtn:hover { transform: scale(1.1); }
 
+        /* === BẢNG THÔNG BÁO CĂN GIỮA TUYỆT ĐỐI === */
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        #popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.3s ease; }
-        .popup-content { background: var(--card-bg); border: 2px solid var(--primary); border-radius: 15px; padding: 20px; text-align: center; position: relative; max-width: 90%; width: 350px; box-shadow: 0 0 30px rgba(0, 0, 0, 0.3); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #popup-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.85); z-index: 9999; 
+            display: flex; justify-content: center; align-items: center; /* Lệnh này ép thông báo ra chính giữa */
+            padding: 20px; box-sizing: border-box; transition: opacity 0.3s ease; 
+        }
+        .popup-content { 
+            background: var(--card-bg); border: 2px solid var(--primary); border-radius: 15px; 
+            padding: 20px; text-align: center; position: relative; 
+            width: 100%; max-width: 350px; /* Giới hạn độ rộng không bị tràn màn hình */
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            box-sizing: border-box;
+        }
         .close-btn { position: absolute; top: -5px; right: 10px; font-size: 35px; color: var(--text); cursor: pointer; transition: 0.2s; }
         .close-btn:hover { color: #ff0055; transform: scale(1.2); }
         .popup-img { width: 100%; border-radius: 10px; margin-bottom: 10px; object-fit: contain; max-height: 250px; }
-        .popup-content h3 { color: var(--primary); margin: 10px 0; text-transform: uppercase; }
-        .popup-content p { font-size: 0.95rem; color: var(--text); margin-bottom: 0; }
+        .popup-content h3 { color: var(--primary); margin: 10px 0; text-transform: uppercase; font-size: 1.2rem; }
+        .popup-content p { font-size: 0.9rem; color: var(--text); margin-bottom: 0; }
+
+        /* ==========================================================
+           === CHẾ ĐỘ RESPONSIVE (LÀM ĐẸP CHO ĐIỆN THOẠI MOBILE) === 
+           ========================================================== */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.2rem; }
+            header p { font-size: 1rem; }
+            /* Căn lại lưới: Hiển thị 2 cột trên điện thoại cho đẹp, khoảng cách nhỏ lại */
+            .gallery { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 0 15px 30px; }
+            /* Thẻ bài trên điện thoại sẽ ngắn lại để vừa vặn */
+            .img-container { height: 220px; }
+            .card-title { font-size: 0.9rem; margin-bottom: 10px; padding: 10px 10px 0; }
+            .card-info { padding: 10px; }
+            .btn-watch { font-size: 0.75rem; padding: 6px 12px; }
+            #theme-toggle { font-size: 0.8rem; padding: 6px 10px; top: 10px; right: 10px; }
+        }
     </style>
 </head>
 <body>
@@ -130,6 +163,7 @@
     </footer>
 
     <script>
+        // Chế độ Sáng/Tối
         const themeToggleBtn = document.getElementById('theme-toggle');
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -162,6 +196,9 @@
         ];
         let currentAdIndex = 0;
 
+        // === BỘ NHỚ ĐỆM (CACHE) ĐỂ CHỐNG LỖI KHI LOAD NHIỀU LINK TIKTOK GIỐNG NHAU ===
+        const tiktokImageCache = {}; 
+
         window.onload = function() {
             Papa.parse(GOOGLE_SHEET_CSV_URL, {
                 download: true,
@@ -174,12 +211,10 @@
                     let cardIndex = 0; 
 
                     data.forEach(item => {
-                        // NẾU BỎ TRỐNG TÊN VIDEO -> TỰ ĐỘNG LẤY TÊN LÀ "Video Cosplay Mới"
                         let titleText = item['Tên Video'] ? item['Tên Video'].trim() : 'Video Cosplay Mới';
                         let coverLink = item['Link Ảnh Bìa'] ? item['Link Ảnh Bìa'].trim() : '';
                         let videoLink = item['Link Video'] ? item['Link Video'].trim() : '';
 
-                        // Chỉ cần có Link Video và Link Ảnh là sẽ hiển thị, cho phép trùng lặp thoải mái
                         if(coverLink && videoLink) {
                             
                             const card = document.createElement('a');
@@ -209,21 +244,34 @@
                             if(coverLink.includes('tiktok.com')) {
                                 img.src = 'https://dummyimage.com/400x600/222/fff.png&text=%C4%90ang+L%E1%BA%A5y+%E1%BA%A2nh...';
                                 
-                                let apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(coverLink)}`;
-                                
-                                fetch(apiUrl)
-                                    .then(res => res.json())
-                                    .then(apiData => {
-                                        if(apiData && apiData.code === 0 && apiData.data && apiData.data.cover) {
-                                            img.src = apiData.data.origin_cover || apiData.data.cover;
-                                        } else {
-                                            // Đã cải thiện ảnh báo lỗi cho đẹp hơn
-                                            img.src = 'https://dummyimage.com/400x600/222/ff0055.png&text=Video+Ch%C6%B0a+S%E1%BA%B5n+S%C3%A0ng';
-                                        }
-                                    })
-                                    .catch(err => {
-                                        img.src = 'https://dummyimage.com/400x600/222/ff0055.png&text=L%E1%BB%97i+M%C3%A1y+Ch%E1%BB%A7';
+                                // NẾU LINK NÀY ĐÃ ĐƯỢC LẤY TRƯỚC ĐÓ RỒI (Tồn tại trong Cache)
+                                if (tiktokImageCache[coverLink]) {
+                                    tiktokImageCache[coverLink].then(url => {
+                                        img.src = url;
+                                    }).catch(() => {
+                                        img.src = 'https://dummyimage.com/400x600/222/ff0055.png&text=Video+Ch%C6%B0a+S%E1%BA%B5n+S%C3%A0ng';
                                     });
+                                } else {
+                                    // NẾU LÀ LINK MỚI, YÊU CẦU API LẤY ẢNH VÀ LƯU VÀO CACHE
+                                    let apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(coverLink)}`;
+                                    
+                                    tiktokImageCache[coverLink] = fetch(apiUrl)
+                                        .then(res => res.json())
+                                        .then(apiData => {
+                                            if(apiData && apiData.code === 0 && apiData.data && apiData.data.cover) {
+                                                let finalUrl = apiData.data.origin_cover || apiData.data.cover;
+                                                img.src = finalUrl;
+                                                return finalUrl; // Lưu vào cache
+                                            } else {
+                                                throw new Error("Lỗi API");
+                                            }
+                                        })
+                                        .catch(err => {
+                                            let errorUrl = 'https://dummyimage.com/400x600/222/ff0055.png&text=Video+Ch%C6%B0a+S%E1%BA%B5n+S%C3%A0ng';
+                                            img.src = errorUrl;
+                                            return errorUrl;
+                                        });
+                                }
                             } else {
                                 img.src = coverLink;
                                 img.onerror = function() {
