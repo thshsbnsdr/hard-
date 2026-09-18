@@ -8,93 +8,102 @@
     <style>
         :root {
             --primary: #00e5ff;
-            --card-bg: rgba(20, 20, 25, 0.85);
+            --card-bg: rgba(20, 20, 25, 0.6);
             --text: #ffffff;
         }
         
-        /* === HỆ THỐNG HÌNH NỀN ÉP CỨNG (SỬA LỖI PC HIỆN NỀN MOBILE) === */
+        /* === NỀN ĐỘNG (ANIMATED GRADIENT) CHUYÊN NGHIỆP === */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
             color: var(--text);
-            overflow-x: hidden;
-            
-            /* Mặc định lấy ảnh DỌC cho ĐIỆN THOẠI */
-            background-image: url(https://i.postimg.cc/0Q3XyqNp/anh-mo-ta.jpg'); 
+            /* Màu nền chuyển động: Đen sẫm -> Xanh Navy -> Tím tối */
+            background: linear-gradient(-45deg, #090a0f, #1a1a2e, #0f3460, #16213e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* ÉP CỨNG: Nếu màn hình lớn hơn 768px (MÁY TÍNH / LAPTOP) thì CHẮC CHẮN dùng ảnh NGANG */
-        @media (min-width: 769px) {
-            body {
-                background-image: url('https://i.postimg.cc/d0YTzXtY/images.jpg') !important; 
-            }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         /* ==================================== */
-
-        .overlay {
-            background-color: rgba(0, 0, 0, 0.6);
-            min-height: 100vh;
-            padding-bottom: 50px;
-        }
 
         @keyframes neonPulse {
             0%, 100% { text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary); }
             50% { text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary), 0 0 60px var(--primary); }
         }
 
-        header { text-align: center; padding: 60px 20px 40px; }
+        header { text-align: center; padding: 50px 20px 20px; }
         header h1 {
-            font-size: 3.5rem;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: var(--text);
-            animation: neonPulse 2s infinite; 
+            font-size: 3.5rem; margin: 0; text-transform: uppercase;
+            letter-spacing: 4px; color: var(--text); animation: neonPulse 2s infinite; 
         }
         header p {
-            color: #00e5ff; font-size: 1.3rem; margin-top: 10px;
+            color: #00e5ff; font-size: 1.2rem; margin-top: 10px;
             font-weight: bold; letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        /* === THANH TÌM KIẾM === */
+        .search-container {
+            text-align: center;
+            margin: 20px auto 40px;
+            width: 100%;
+            max-width: 500px;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px 25px;
+            border-radius: 30px;
+            border: 2px solid rgba(0, 229, 255, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .search-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
         }
 
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px;
-            padding: 20px 50px;
+            padding: 0 50px 50px;
             max-width: 1200px;
             margin: 0 auto;
+            flex-grow: 1; /* Để đẩy footer xuống cuối */
         }
 
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
         .card {
             background-color: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
+            border-radius: 12px; overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
-            text-decoration: none;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(0, 229, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            opacity: 0; 
-            transform: translateY(30px);
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            text-decoration: none; backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex; flex-direction: column;
+            opacity: 0; transform: translateY(30px);
             animation: fadeInUp 0.6s ease forwards;
         }
         .card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 12px 25px rgba(0, 229, 255, 0.5);
-            border-color: var(--primary);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 229, 255, 0.3);
+            border-color: rgba(0, 229, 255, 0.5);
         }
         
-        .img-container { width: 100%; height: 380px; overflow: hidden; border-bottom: 2px solid var(--primary); }
+        .img-container { width: 100%; height: 380px; overflow: hidden; border-bottom: 2px solid var(--primary); background: #000; }
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
         .card:hover .card-img { transform: scale(1.08); }
 
@@ -105,36 +114,47 @@
             display: inline-block; background-color: transparent; color: var(--primary);
             border: 2px solid var(--primary); padding: 10px 20px; border-radius: 25px;
             font-weight: bold; text-transform: uppercase; font-size: 0.9rem;
-            transition: all 0.3s ease; box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+            transition: all 0.3s ease;
         }
         .card:hover .btn-watch { background-color: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
 
         #loading { text-align: center; padding: 50px; font-size: 1.5rem; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
 
-        /* === POPUP THÔNG BÁO === */
-        @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        /* FOOTER CHUYÊN NGHIỆP */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-top: 1px solid rgba(0, 229, 255, 0.2);
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: auto;
         }
+        footer span { color: var(--primary); font-weight: bold; }
+
+        /* NÚT CUỘN LÊN ĐẦU TRANG */
+        #scrollTopBtn {
+            display: none; position: fixed; bottom: 30px; right: 30px; z-index: 99;
+            background-color: var(--primary); color: #000; font-size: 20px;
+            border: none; outline: none; cursor: pointer; padding: 15px;
+            border-radius: 50%; box-shadow: 0 0 15px var(--primary); transition: 0.3s;
+            width: 50px; height: 50px; text-align: center; line-height: 20px;
+        }
+        #scrollTopBtn:hover { background-color: #fff; transform: scale(1.1); }
+
+        /* POPUP THÔNG BÁO */
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         #popup-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.3s ease;
+            display: flex; justify-content: center; align-items: center; transition: opacity 0.3s ease;
         }
         .popup-content {
-            background: rgba(20, 20, 25, 0.95);
-            border: 2px solid var(--primary); border-radius: 15px;
-            padding: 20px; text-align: center; position: relative;
-            max-width: 90%; width: 350px;
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(10px);
+            background: rgba(15, 15, 20, 0.95); border: 2px solid var(--primary); border-radius: 15px;
+            padding: 20px; text-align: center; position: relative; max-width: 90%; width: 350px;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .close-btn {
-            position: absolute; top: -5px; right: 10px;
-            font-size: 35px; color: #fff; cursor: pointer; font-weight: bold; transition: 0.2s;
-        }
+        .close-btn { position: absolute; top: -5px; right: 10px; font-size: 35px; color: #fff; cursor: pointer; transition: 0.2s; }
         .close-btn:hover { color: #ff0055; transform: scale(1.2); }
         .popup-img { width: 100%; border-radius: 10px; margin-bottom: 10px; object-fit: contain; max-height: 250px; }
         .popup-content h3 { color: var(--primary); margin: 10px 0; text-transform: uppercase; }
@@ -143,37 +163,44 @@
 </head>
 <body>
     
-    <!-- KHUNG POPUP THÔNG BÁO -->
+    <!-- POPUP -->
     <div id="popup-overlay">
         <div class="popup-content">
             <span class="close-btn" onclick="closePopup()">&times;</span>
-            <!-- ẢNH THÔNG BÁO MỚI ĐÃ ĐƯỢC CẬP NHẬT TẠI ĐÂY -->
             <img src="https://i.postimg.cc/RFnq2cJM/315c2199-764b-4a62-b467-99c3a42ad7e9.png" alt="Thông báo" class="popup-img">
             <h3>Chào mừng AE!</h3>
             <p>Chúc anh em có những phút giây giải tỏa vui vẻ tại KiraKira. Đừng quên click xem video nhé!</p>
         </div>
     </div>
 
-    <div class="overlay">
-        <header>
-            <h1>KiraKira Cosplay</h1>
-            <p>NƠI ĐỂ AE GIẢI TỎA</p>
-        </header>
+    <!-- NÚT LÊN ĐẦU TRANG -->
+    <button onclick="scrollToTop()" id="scrollTopBtn" title="Lên đầu trang">↑</button>
 
-        <div id="loading">Đang tải dữ liệu, ae chờ chút nhé...</div>
-        <div id="video-gallery" class="gallery"></div>
+    <header>
+        <h1>KiraKira Cosplay</h1>
+        <p>NƠI ĐỂ AE GIẢI TỎA</p>
+    </header>
+
+    <!-- THANH TÌM KIẾM -->
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-box" placeholder="🔍 Nhập tên video để tìm kiếm...">
     </div>
+
+    <div id="loading">Đang tải dữ liệu, ae chờ chút nhé...</div>
+    <div id="video-gallery" class="gallery"></div>
+
+    <!-- CHÂN TRANG -->
+    <footer>
+        &copy; 2026 <span>KiraKira Cosplay</span>. Tất cả các quyền được bảo lưu.
+    </footer>
 
     <script>
         function closePopup() {
             document.getElementById('popup-overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('popup-overlay').style.display = 'none';
-            }, 300); 
+            setTimeout(() => { document.getElementById('popup-overlay').style.display = 'none'; }, 300); 
         }
 
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAb1YZ1F5eH0CM5u7CGph-4qmgZoVjXf5QvWX90T-1sjhggBM7SM0ROCmpJYontZv8UxXDccsAKzGW/pub?gid=0&single=true&output=csv';
-
         const adLinks = [
             "https://vt.tiktok.com/ZS9h36wYouDLb-ojzE1/",
             "https://vt.tiktok.com/ZS9hwC35QqF5E-27I2e/",
@@ -181,7 +208,6 @@
             "https://cheaplyregainthrift.com/dv3xs68de?key=877289809972cac42e2b995f1b380545",
             "https://vnvip.eastasia.cloudapp.azure.com/j3wgo"
         ];
-        
         let currentAdIndex = 0;
 
         window.onload = function() {
@@ -192,17 +218,15 @@
                     const data = results.data;
                     const gallery = document.getElementById('video-gallery');
                     document.getElementById('loading').style.display = 'none';
-                    
                     let cardIndex = 0; 
 
                     data.forEach(item => {
                         if(item['Tên Video'] && item['Link Ảnh Bìa'] && item['Link Video']) {
                             
                             const card = document.createElement('a');
-                            card.className = 'card';
+                            card.className = 'card video-card'; // Thêm class video-card để lọc tìm kiếm
                             card.href = item['Link Video'];
                             card.target = '_blank'; 
-                            
                             card.style.animationDelay = `${cardIndex * 0.1}s`;
                             cardIndex++;
                             
@@ -217,12 +241,24 @@
                                 }
                             });
 
+                            // XỬ LÝ LỖI LINK TIKTOK TRONG CỘT ẢNH BÌA
+                            let imageSource = item['Link Ảnh Bìa'];
+                            if(imageSource.includes('tiktok.com')) {
+                                // Nếu người dùng dán nhầm link web tiktok, tự động dùng ảnh chữ TikTok ngầu lòi này
+                                imageSource = 'https://placehold.co/400x600/16213e/00e5ff?text=TIKTOK\\nVIDEO\\n(Click+To+Watch)';
+                            }
+
                             const imgContainer = document.createElement('div');
                             imgContainer.className = 'img-container';
                             const img = document.createElement('img');
                             img.className = 'card-img';
-                            img.src = item['Link Ảnh Bìa'];
+                            img.src = imageSource;
                             img.alt = item['Tên Video'];
+                            
+                            // Nếu link ảnh die, load ảnh dự phòng
+                            img.onerror = function() {
+                                this.src = 'https://placehold.co/400x600/16213e/ff0055?text=Lỗi+Tải+Ảnh';
+                            };
                             imgContainer.appendChild(img);
 
                             const infoContainer = document.createElement('div');
@@ -243,11 +279,37 @@
                             gallery.appendChild(card);
                         }
                     });
-                },
-                error: function(err) {
-                    document.getElementById('loading').textContent = 'Oops! Lỗi không tải được dữ liệu...';
                 }
             });
+        }
+
+        // TÍNH NĂNG TÌM KIẾM VIDEO
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let cards = document.querySelectorAll('.video-card');
+            
+            cards.forEach(card => {
+                let title = card.querySelector('.card-title').textContent.toLowerCase();
+                if(title.indexOf(filter) > -1) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // TÍNH NĂNG CUỘN LÊN ĐẦU TRANG
+        window.onscroll = function() {
+            let btn = document.getElementById("scrollTopBtn");
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                btn.style.display = "block";
+            } else {
+                btn.style.display = "none";
+            }
+        };
+
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
     </script>
 </body>
