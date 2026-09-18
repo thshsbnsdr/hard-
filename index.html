@@ -1,45 +1,58 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- === MÃ TÀNG HÌNH CHỐNG TIKTOK CHẶN ẢNH (QUAN TRỌNG NHẤT) === -->
     <meta name="referrer" content="no-referrer">
-    <!-- ============================================================ -->
-
     <title>KiraKira Cosplay - Nơi Để AE Giải Tỏa</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
+            --primary: #ff007f;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --text: #222222;
+            --bg-color-1: #ffe6f2; --bg-color-2: #ffffff; --bg-color-3: #e6f7ff; --bg-color-4: #f3e6ff;
+            --title-shadow: 0 0 5px rgba(255, 0, 127, 0.3); --header-text: #222;
+            --input-bg: rgba(255, 255, 255, 0.9); --placeholder: #666;
+        }
+
+        [data-theme="dark"] {
             --primary: #00e5ff;
-            --card-bg: rgba(20, 20, 25, 0.6);
+            --card-bg: rgba(20, 20, 25, 0.75);
             --text: #ffffff;
+            --bg-color-1: #090a0f; --bg-color-2: #1a1a2e; --bg-color-3: #0f3460; --bg-color-4: #16213e;
+            --title-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary); --header-text: #ffffff;
+            --input-bg: rgba(0, 0, 0, 0.6); --placeholder: #aaa;
         }
         
         body {
-            margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text);
-            background: linear-gradient(-45deg, #090a0f, #1a1a2e, #0f3460, #16213e);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            min-height: 100vh; display: flex; flex-direction: column;
+            margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: var(--text);
+            background: linear-gradient(-45deg, var(--bg-color-1), var(--bg-color-2), var(--bg-color-3), var(--bg-color-4));
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+            min-height: 100vh; display: flex; flex-direction: column; transition: background 0.5s ease, color 0.5s ease;
         }
 
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes neonPulse { 0%, 100% { text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary); } 50% { text-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary), 0 0 60px var(--primary); } }
 
-        header { text-align: center; padding: 50px 20px 20px; }
-        header h1 { font-size: 3.5rem; margin: 0; text-transform: uppercase; letter-spacing: 4px; color: var(--text); animation: neonPulse 2s infinite; }
-        header p { color: #00e5ff; font-size: 1.2rem; margin-top: 10px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+        #theme-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: var(--card-bg); border: 2px solid var(--primary); color: var(--text);
+            padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1); transition: all 0.3s;
+        }
+        #theme-toggle:hover { transform: scale(1.1); background: var(--primary); color: #fff; }
+
+        header { text-align: center; padding: 60px 20px 20px; }
+        header h1 { font-size: 3.5rem; margin: 0; text-transform: uppercase; letter-spacing: 4px; color: var(--header-text); text-shadow: var(--title-shadow); transition: all 0.5s; }
+        header p { color: var(--primary); font-size: 1.2rem; margin-top: 10px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
 
         .search-container { text-align: center; margin: 20px auto 40px; width: 100%; max-width: 500px; padding: 0 20px; box-sizing: border-box; }
         .search-box {
-            width: 100%; padding: 12px 25px; border-radius: 30px; border: 2px solid rgba(0, 229, 255, 0.3);
-            background: rgba(0, 0, 0, 0.5); color: white; font-size: 1.1rem; outline: none; transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            width: 100%; padding: 12px 25px; border-radius: 30px; border: 2px solid var(--primary);
+            background: var(--input-bg); color: var(--text); font-size: 1.1rem; outline: none; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        .search-box:focus { border-color: var(--primary); box-shadow: 0 0 20px rgba(0, 229, 255, 0.4); }
+        .search-box::placeholder { color: var(--placeholder); }
+        .search-box:focus { box-shadow: 0 0 20px var(--primary); transform: scale(1.02); }
 
         .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding: 0 50px 50px; max-width: 1200px; margin: 0 auto; flex-grow: 1; }
 
@@ -47,15 +60,13 @@
 
         .card {
             background-color: var(--card-bg); border-radius: 12px; overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); text-decoration: none; backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;
-            opacity: 0; transform: translateY(30px); animation: fadeInUp 0.6s ease forwards;
+            transition: all 0.3s ease; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            text-decoration: none; backdrop-filter: blur(10px); border: 1px solid rgba(128,128,128,0.2);
+            display: flex; flex-direction: column; opacity: 0; transform: translateY(30px); animation: fadeInUp 0.6s ease forwards;
         }
-        .card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0, 229, 255, 0.3); border-color: rgba(0, 229, 255, 0.5); }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.25); border-color: var(--primary); }
         
-        .img-container { width: 100%; height: 380px; overflow: hidden; border-bottom: 2px solid var(--primary); background: #000; position: relative; display: flex; justify-content: center; align-items: center;}
-        
+        .img-container { width: 100%; height: 380px; overflow: hidden; border-bottom: 2px solid var(--primary); background: #111; position: relative; display: flex; justify-content: center; align-items: center;}
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
         .card:hover .card-img { transform: scale(1.08); }
 
@@ -67,28 +78,30 @@
             border: 2px solid var(--primary); padding: 10px 20px; border-radius: 25px;
             font-weight: bold; text-transform: uppercase; font-size: 0.9rem; transition: all 0.3s ease;
         }
-        .card:hover .btn-watch { background-color: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
+        .card:hover .btn-watch { background-color: var(--primary); color: #fff; box-shadow: 0 0 15px var(--primary); }
 
-        #loading { text-align: center; padding: 50px; font-size: 1.5rem; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+        #loading { text-align: center; padding: 50px; font-size: 1.5rem; color: var(--primary); font-weight: bold;}
 
-        footer { text-align: center; padding: 20px; background: rgba(0, 0, 0, 0.6); border-top: 1px solid rgba(0, 229, 255, 0.2); font-size: 0.9rem; color: #aaa; margin-top: auto; }
+        footer { text-align: center; padding: 20px; background: var(--card-bg); border-top: 1px solid var(--primary); font-size: 0.9rem; color: var(--text); margin-top: auto; }
         footer span { color: var(--primary); font-weight: bold; }
 
-        #scrollTopBtn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 99; background-color: var(--primary); color: #000; font-size: 20px; border: none; outline: none; cursor: pointer; padding: 15px; border-radius: 50%; box-shadow: 0 0 15px var(--primary); transition: 0.3s; width: 50px; height: 50px; text-align: center; line-height: 20px; }
-        #scrollTopBtn:hover { background-color: #fff; transform: scale(1.1); }
+        #scrollTopBtn { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 99; background-color: var(--primary); color: #fff; font-size: 20px; border: none; outline: none; cursor: pointer; padding: 15px; border-radius: 50%; box-shadow: 0 0 15px var(--primary); transition: 0.3s; width: 50px; height: 50px; text-align: center; line-height: 20px; }
+        #scrollTopBtn:hover { transform: scale(1.1); }
 
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         #popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 0.3s ease; }
-        .popup-content { background: rgba(15, 15, 20, 0.95); border: 2px solid var(--primary); border-radius: 15px; padding: 20px; text-align: center; position: relative; max-width: 90%; width: 350px; box-shadow: 0 0 30px rgba(0, 229, 255, 0.3); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .close-btn { position: absolute; top: -5px; right: 10px; font-size: 35px; color: #fff; cursor: pointer; transition: 0.2s; }
+        .popup-content { background: var(--card-bg); border: 2px solid var(--primary); border-radius: 15px; padding: 20px; text-align: center; position: relative; max-width: 90%; width: 350px; box-shadow: 0 0 30px rgba(0, 0, 0, 0.3); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .close-btn { position: absolute; top: -5px; right: 10px; font-size: 35px; color: var(--text); cursor: pointer; transition: 0.2s; }
         .close-btn:hover { color: #ff0055; transform: scale(1.2); }
         .popup-img { width: 100%; border-radius: 10px; margin-bottom: 10px; object-fit: contain; max-height: 250px; }
         .popup-content h3 { color: var(--primary); margin: 10px 0; text-transform: uppercase; }
-        .popup-content p { font-size: 0.95rem; color: #ccc; margin-bottom: 0; }
+        .popup-content p { font-size: 0.95rem; color: var(--text); margin-bottom: 0; }
     </style>
 </head>
 <body>
     
+    <button id="theme-toggle">🌙 Giao diện Tối</button>
+
     <div id="popup-overlay">
         <div class="popup-content">
             <span class="close-btn" onclick="closePopup()">&times;</span>
@@ -117,6 +130,23 @@
     </footer>
 
     <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateBtnText(savedTheme);
+
+        themeToggleBtn.addEventListener('click', () => {
+            let currentTheme = document.documentElement.getAttribute('data-theme');
+            let newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateBtnText(newTheme);
+        });
+
+        function updateBtnText(theme) {
+            themeToggleBtn.innerHTML = theme === 'light' ? '🌙 Chế độ Tối' : '☀️ Chế độ Sáng';
+        }
+
         function closePopup() {
             document.getElementById('popup-overlay').style.opacity = '0';
             setTimeout(() => { document.getElementById('popup-overlay').style.display = 'none'; }, 300); 
@@ -140,14 +170,21 @@
                     const data = results.data;
                     const gallery = document.getElementById('video-gallery');
                     document.getElementById('loading').style.display = 'none';
+                    
                     let cardIndex = 0; 
 
                     data.forEach(item => {
-                        if(item['Tên Video'] && item['Link Ảnh Bìa'] && item['Link Video']) {
+                        // NẾU BỎ TRỐNG TÊN VIDEO -> TỰ ĐỘNG LẤY TÊN LÀ "Video Cosplay Mới"
+                        let titleText = item['Tên Video'] ? item['Tên Video'].trim() : 'Video Cosplay Mới';
+                        let coverLink = item['Link Ảnh Bìa'] ? item['Link Ảnh Bìa'].trim() : '';
+                        let videoLink = item['Link Video'] ? item['Link Video'].trim() : '';
+
+                        // Chỉ cần có Link Video và Link Ảnh là sẽ hiển thị, cho phép trùng lặp thoải mái
+                        if(coverLink && videoLink) {
                             
                             const card = document.createElement('a');
                             card.className = 'card video-card'; 
-                            card.href = item['Link Video'];
+                            card.href = videoLink;
                             card.target = '_blank'; 
                             card.style.animationDelay = `${cardIndex * 0.1}s`;
                             cardIndex++;
@@ -167,14 +204,12 @@
                             imgContainer.className = 'img-container';
                             const img = document.createElement('img');
                             img.className = 'card-img';
-                            img.alt = item['Tên Video'];
+                            img.alt = titleText;
 
-                            let imageSource = item['Link Ảnh Bìa'];
-
-                            if(imageSource.includes('tiktok.com')) {
-                                img.src = 'https://dummyimage.com/400x600/16213e/00e5ff.png&text=%C4%90ang+L%E1%BA%A5y+%E1%BA%A2nh+TikTok...';
+                            if(coverLink.includes('tiktok.com')) {
+                                img.src = 'https://dummyimage.com/400x600/222/fff.png&text=%C4%90ang+L%E1%BA%A5y+%E1%BA%A2nh...';
                                 
-                                let apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(imageSource)}`;
+                                let apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(coverLink)}`;
                                 
                                 fetch(apiUrl)
                                     .then(res => res.json())
@@ -182,16 +217,17 @@
                                         if(apiData && apiData.code === 0 && apiData.data && apiData.data.cover) {
                                             img.src = apiData.data.origin_cover || apiData.data.cover;
                                         } else {
-                                            img.src = 'https://dummyimage.com/400x600/16213e/ff0055.png&text=Video+L%E1%BB%97i+Ho%E1%BA%B7c+B%E1%BB%8B+X%C3%B3a';
+                                            // Đã cải thiện ảnh báo lỗi cho đẹp hơn
+                                            img.src = 'https://dummyimage.com/400x600/222/ff0055.png&text=Video+Ch%C6%B0a+S%E1%BA%B5n+S%C3%A0ng';
                                         }
                                     })
                                     .catch(err => {
-                                        img.src = 'https://dummyimage.com/400x600/16213e/ff0055.png&text=L%E1%BB%97i+M%C3%A1y+Ch%E1%BB%A7';
+                                        img.src = 'https://dummyimage.com/400x600/222/ff0055.png&text=L%E1%BB%97i+M%C3%A1y+Ch%E1%BB%A7';
                                     });
                             } else {
-                                img.src = imageSource;
+                                img.src = coverLink;
                                 img.onerror = function() {
-                                    this.src = 'https://dummyimage.com/400x600/16213e/ff0055.png&text=L%E1%BB%97i+T%E1%BA%A3i+%E1%BA%A2nh';
+                                    this.src = 'https://dummyimage.com/400x600/222/ff0055.png&text=L%E1%BB%97i+T%E1%BA%A3i+%E1%BA%A2nh';
                                 };
                             }
 
@@ -201,7 +237,7 @@
                             infoContainer.className = 'card-info';
                             const title = document.createElement('div');
                             title.className = 'card-title';
-                            title.textContent = item['Tên Video'];
+                            title.textContent = titleText;
 
                             const btnWatch = document.createElement('div');
                             btnWatch.className = 'btn-watch';
@@ -219,7 +255,6 @@
             });
         }
 
-        // TÌM KIẾM
         document.getElementById('searchInput').addEventListener('keyup', function() {
             let filter = this.value.toLowerCase();
             let cards = document.querySelectorAll('.video-card');
@@ -230,7 +265,6 @@
             });
         });
 
-        // NÚT CUỘN LÊN ĐẦU
         window.onscroll = function() {
             let btn = document.getElementById("scrollTopBtn");
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
