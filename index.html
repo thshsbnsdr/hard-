@@ -73,16 +73,9 @@
         .card-info { padding: 15px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; text-align: center; }
         .card-title { font-size: 1.05rem; font-weight: bold; color: var(--text); margin-bottom: 10px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* KHU VỰC CHỨA LƯỢT XEM VÀ TYM */
-        .card-stats {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.9rem; color: var(--stats-text); margin-bottom: 12px; padding: 0 10px;
-        }
+        .card-stats { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: var(--stats-text); margin-bottom: 12px; padding: 0 10px; }
         .view-count { display: flex; align-items: center; gap: 5px; font-weight: bold; }
-        .like-btn {
-            font-size: 1.2rem; cursor: pointer; transition: transform 0.2s, filter 0.2s;
-            user-select: none;
-        }
+        .like-btn { font-size: 1.2rem; cursor: pointer; transition: transform 0.2s, filter 0.2s; user-select: none; }
         .like-btn:hover { transform: scale(1.2); }
         @keyframes heartPop { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
         .like-btn.liked { animation: heartPop 0.3s ease; color: #ff0055; }
@@ -102,7 +95,6 @@
         #scrollTopBtn { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; background-color: var(--primary); color: #fff; font-size: 20px; border: none; outline: none; cursor: pointer; padding: 12px; border-radius: 50%; box-shadow: 0 0 15px var(--primary); transition: 0.3s; width: 45px; height: 45px; text-align: center; line-height: 18px; }
         #scrollTopBtn:hover { transform: scale(1.1); }
 
-        /* BẢNG THÔNG BÁO DÙNG CHUNG */
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .popup-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -120,7 +112,6 @@
         .close-btn:hover { color: #ff0055; transform: scale(1.2); }
         .popup-img { width: 100%; border-radius: 10px; margin-bottom: 10px; object-fit: contain; max-height: 250px; }
         
-        /* Chỉnh riêng bảng Vượt Link */
         #link-popup .popup-content h3 { color: var(--primary); margin: 10px 0; font-size: 1.4rem; }
         #link-popup .popup-content p { font-size: 1.1rem; color: var(--text); margin: 10px 0; font-weight: bold;}
         .btn-tiep-tuc {
@@ -151,7 +142,6 @@
     
     <button id="theme-toggle">🌙 Giao diện Tối</button>
 
-    <!-- BẢNG THÔNG BÁO CHÀO MỪNG (Vào web hiện luôn) -->
     <div id="welcome-popup" class="popup-overlay">
         <div class="popup-content">
             <span class="close-btn" onclick="closePopup('welcome-popup')">&times;</span>
@@ -161,7 +151,7 @@
         </div>
     </div>
 
-    <!-- BẢNG THÔNG BÁO VƯỢT LINK (Hiện khi bấm xem video) -->
+    <!-- BẢNG VƯỢT LINK (Hiện ra sau khi Quảng cáo đã văng sang tab mới) -->
     <div id="link-popup" class="popup-overlay">
         <div class="popup-content">
             <span class="close-btn" onclick="closePopup('link-popup')">&times;</span>
@@ -191,7 +181,6 @@
     </footer>
 
     <script>
-        // --- CHẾ ĐỘ DARK/LIGHT MODE ---
         const themeToggleBtn = document.getElementById('theme-toggle');
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -209,7 +198,6 @@
             themeToggleBtn.innerHTML = theme === 'light' ? '🌙 Chế độ Tối' : '☀️ Chế độ Sáng';
         }
 
-        // --- QUẢN LÝ POPUP ---
         function showPopup(id) {
             let el = document.getElementById(id);
             el.style.display = 'flex';
@@ -221,10 +209,8 @@
             setTimeout(() => { el.style.display = 'none'; }, 300);
         }
 
-        // Hiện popup chào mừng lúc mới vào
         window.addEventListener('DOMContentLoaded', () => { showPopup('welcome-popup'); });
 
-        // --- DỮ LIỆU & BIẾN TOÀN CỤC ---
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAb1YZ1F5eH0CM5u7CGph-4qmgZoVjXf5QvWX90T-1sjhggBM7SM0ROCmpJYontZv8UxXDccsAKzGW/pub?gid=0&single=true&output=csv';
         const adLinks = [
             "https://vt.tiktok.com/ZS9h36wYouDLb-ojzE1/",
@@ -236,15 +222,13 @@
         let currentAdIndex = 0;
         const tiktokImageCache = {}; 
         
-        // Biến lưu trữ video đang được click để xử lý Vượt Link
         let activeCardElement = null;
         let activeVideoUrl = "";
 
-        // Hàm tạo View ảo nhất quán từ URL
         function generateBaseViews(url) {
             let num = 0;
             for(let i=0; i<url.length; i++) { num += url.charCodeAt(i); }
-            return (num * 123) % 4000 + 1000; // Ra số từ 1000 đến 5000
+            return (num * 123) % 4000 + 1000; 
         }
 
         window.onload = function() {
@@ -257,7 +241,6 @@
                     document.getElementById('loading').style.display = 'none';
                     let cardIndex = 0; 
                     
-                    // Lấy danh sách yêu thích từ máy
                     let likedVideos = JSON.parse(localStorage.getItem('liked_videos') || '[]');
 
                     data.forEach(item => {
@@ -269,20 +252,29 @@
                             
                             const card = document.createElement('a');
                             card.className = 'card video-card'; 
-                            card.href = "#"; // Chặn link mở trực tiếp
+                            card.href = "#"; 
                             card.style.animationDelay = `${cardIndex * 0.1}s`;
                             cardIndex++;
                             card.dataset.adClicked = "false"; 
 
-                            // XỬ LÝ CLICK CARD -> HIỆN BẢNG VƯỢT LINK
+                            // TÍNH NĂNG CHUYỂN QUẢNG CÁO NGAY LẬP TỨC
                             card.addEventListener('click', function(event) {
                                 event.preventDefault(); 
                                 activeCardElement = this;
                                 activeVideoUrl = videoLink;
+
+                                if (this.dataset.adClicked === "false") {
+                                    // 1. Mở Quảng cáo thẳng ở Tab mới ngay lúc bấm
+                                    let adUrl = adLinks[currentAdIndex];
+                                    window.open(adUrl, '_blank');
+                                    currentAdIndex = (currentAdIndex + 1) % adLinks.length;
+                                    this.dataset.adClicked = "true"; 
+                                }
+                                
+                                // 2. Bảng Vượt Link hiện ra ở trang hiện tại để chờ họ
                                 showPopup('link-popup');
                             });
 
-                            // Ảnh bìa
                             const imgContainer = document.createElement('div');
                             imgContainer.className = 'img-container';
                             const img = document.createElement('img');
@@ -315,13 +307,11 @@
                             }
                             imgContainer.appendChild(img);
 
-                            // Tính Toán Lượt Xem
                             let baseViews = generateBaseViews(videoLink);
                             let localViews = parseInt(localStorage.getItem('view_' + videoLink)) || 0;
                             let totalViews = baseViews + localViews;
                             let isLiked = likedVideos.includes(videoLink);
 
-                            // Vùng thông tin
                             const infoContainer = document.createElement('div');
                             infoContainer.className = 'card-info';
                             
@@ -329,7 +319,6 @@
                             title.className = 'card-title';
                             title.textContent = titleText;
 
-                            // Khu vực Stats (MẮT XEM + THẢ TYM)
                             const statsDiv = document.createElement('div');
                             statsDiv.className = 'card-stats';
                             statsDiv.innerHTML = `
@@ -337,7 +326,6 @@
                                 <span class="like-btn ${isLiked ? 'liked' : ''}" data-url="${videoLink}">${isLiked ? '❤️' : '🤍'}</span>
                             `;
 
-                            // Sự kiện Thả Tym (stopPropagation để không bị hiện bảng Vượt Link)
                             statsDiv.querySelector('.like-btn').addEventListener('click', function(e) {
                                 e.preventDefault();
                                 e.stopPropagation(); 
@@ -373,34 +361,23 @@
             });
         }
 
-        // --- XỬ LÝ NÚT "TIẾP TỤC" TRONG BẢNG VƯỢT LINK ---
+        // TÍNH NĂNG MỞ VIDEO TRONG BẢNG THÔNG BÁO
         document.getElementById('btn-tiep-tuc').addEventListener('click', function() {
             if(!activeCardElement || !activeVideoUrl) return;
 
-            if (activeCardElement.dataset.adClicked === "false") {
-                // Lần 1: Bấm "Tiếp tục" -> Mở Link Quảng Cáo
-                let adUrl = adLinks[currentAdIndex];
-                window.open(adUrl, '_blank');
-                currentAdIndex = (currentAdIndex + 1) % adLinks.length;
-                activeCardElement.dataset.adClicked = "true"; 
-                closePopup('link-popup');
-            } else {
-                // Lần 2 (Sau khi đã xem QC): Bấm "Tiếp tục" -> Mở Video
-                window.open(activeVideoUrl, '_blank');
-                closePopup('link-popup');
-                
-                // Tăng Lượt Xem
-                let currentViews = parseInt(localStorage.getItem('view_' + activeVideoUrl)) || 0;
-                localStorage.setItem('view_' + activeVideoUrl, currentViews + 1);
-                
-                // Cập nhật số liệu trên thẻ bài đó ngay lập tức (cộng 1 vào giao diện)
-                let numElement = activeCardElement.querySelector('.v-num');
-                let currentTotal = parseInt(numElement.textContent.replace(/,/g, ''));
-                numElement.textContent = (currentTotal + 1).toLocaleString();
-            }
+            // Đã bắn QC lúc bấm ở ngoài rồi, giờ bấm Tiếp tục chỉ việc mở Video
+            window.open(activeVideoUrl, '_blank');
+            closePopup('link-popup');
+            
+            // Tăng Lượt Xem
+            let currentViews = parseInt(localStorage.getItem('view_' + activeVideoUrl)) || 0;
+            localStorage.setItem('view_' + activeVideoUrl, currentViews + 1);
+            
+            let numElement = activeCardElement.querySelector('.v-num');
+            let currentTotal = parseInt(numElement.textContent.replace(/,/g, ''));
+            numElement.textContent = (currentTotal + 1).toLocaleString();
         });
 
-        // TÌM KIẾM
         document.getElementById('searchInput').addEventListener('keyup', function() {
             let filter = this.value.toLowerCase();
             let cards = document.querySelectorAll('.video-card');
@@ -411,7 +388,6 @@
             });
         });
 
-        // CUỘN LÊN ĐẦU TRANG
         window.onscroll = function() {
             let btn = document.getElementById("scrollTopBtn");
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) { btn.style.display = "block"; } 
