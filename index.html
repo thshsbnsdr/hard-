@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="referrer" content="no-referrer">
     
-    <!-- === 11. SEO & OPEN GRAPH === -->
     <title>KiraKira Cosplay - Thế giới Cosplay dành cho bạn</title>
     <meta name="description" content="KiraKira Cosplay - Nơi tổng hợp những video cosplay anime, game xịn sò nhất. Giải tỏa căng thẳng mỗi ngày cùng anh em.">
     <meta property="og:title" content="KiraKira Cosplay - Thế giới Cosplay">
@@ -17,7 +16,6 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* === BIẾN MÀU GIAO DIỆN === */
         :root {
             --primary: #ff007f; --bg-main: #f4f7f6; --card-bg: #ffffff; 
             --text-main: #111; --text-sub: #666; --border: #e0e0e0;
@@ -32,11 +30,9 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-main); color: var(--text-main);
-            transition: background 0.3s, color 0.3s;
-            overflow-x: hidden;
+            transition: background 0.3s, color 0.3s; overflow-x: hidden;
         }
 
-        /* === 2. MENU NAVIGATION === */
         nav {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             background: var(--nav-bg); backdrop-filter: blur(10px);
@@ -53,7 +49,6 @@
         header h1 { font-size: 2.8rem; margin-bottom: 10px; color: var(--primary); text-shadow: 0 0 10px rgba(0, 229, 255, 0.3); }
         header p { font-size: 1.1rem; color: var(--text-sub); }
 
-        /* === 3. Ô TÌM KIẾM ĐẸP === */
         .search-container { max-width: 600px; margin: 0 auto 30px; display: flex; gap: 10px; padding: 0 15px; }
         .search-box {
             flex-grow: 1; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--border);
@@ -61,22 +56,11 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s;
         }
         .search-box:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); }
-        .btn-search {
-            background: var(--primary); color: #000; border: none; padding: 0 20px;
-            border-radius: 25px; font-weight: bold; cursor: pointer; transition: 0.3s;
-        }
+        .btn-search { background: var(--primary); color: #000; border: none; padding: 0 20px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-search:hover { transform: scale(1.05); box-shadow: 0 0 10px var(--primary); }
 
-        /* === 4. NỘI DUNG DẠNG CARD === */
-        .gallery {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px; padding: 0 20px 50px; max-width: 1200px; margin: 0 auto;
-        }
-        .card {
-            background: var(--card-bg); border-radius: 12px; overflow: hidden;
-            border: 1px solid var(--border); cursor: pointer; transition: 0.3s;
-            display: flex; flex-direction: column; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 0 20px 50px; max-width: 1200px; margin: 0 auto; }
+        .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
         .img-container { width: 100%; height: 320px; background: #111; overflow: hidden; position: relative;}
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
@@ -88,13 +72,8 @@
         .btn-play { background: rgba(0, 229, 255, 0.1); color: var(--primary); border: 1px solid var(--primary); padding: 8px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 0.85rem; margin-top: auto; }
         .card:hover .btn-play { background: var(--primary); color: #000; }
 
-        /* === 6. SKELETON LOADING ĐẸP === */
         .skeleton { background: var(--border); position: relative; overflow: hidden; border-radius: 12px; }
-        .skeleton::after {
-            content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shimmer 1.5s infinite;
-        }
+        .skeleton::after { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 100% { left: 100%; } }
         .skel-card { display: flex; flex-direction: column; gap: 10px; padding-bottom: 15px;}
         .skel-img { height: 320px; width: 100%; }
@@ -104,7 +83,6 @@
         #error-msg { text-align: center; padding: 50px; color: #ff3366; font-size: 1.2rem; display: none; }
         #no-result { text-align: center; padding: 50px; color: var(--text-sub); font-size: 1.2rem; display: none; width: 100%; grid-column: 1 / -1;}
 
-        /* === 5. TRANG XEM NỘI DUNG RIÊNG (SINGLE VIEW) === */
         #home-view { display: block; }
         #single-view { display: none; max-width: 1000px; margin: 80px auto 50px; padding: 0 20px; animation: fadeIn 0.4s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -120,36 +98,30 @@
         .single-date { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 20px; }
         .single-desc { font-size: 1rem; line-height: 1.6; margin-bottom: 30px; color: var(--text-main); }
         
-        .btn-watch-huge {
-            display: block; width: 100%; background: var(--primary); color: #000;
-            text-align: center; padding: 15px; border-radius: 30px; font-size: 1.2rem;
-            font-weight: 900; cursor: pointer; text-decoration: none; border: none; box-shadow: 0 5px 20px rgba(0, 229, 255, 0.4);
-        }
+        .btn-watch-huge { display: block; width: 100%; background: var(--primary); color: #000; text-align: center; padding: 15px; border-radius: 30px; font-size: 1.2rem; font-weight: 900; cursor: pointer; text-decoration: none; border: none; box-shadow: 0 5px 20px rgba(0, 229, 255, 0.4); transition: 0.3s;}
         .btn-watch-huge:hover { transform: scale(1.02); }
 
         .related-section { margin-top: 50px; }
         .related-section h3 { margin-bottom: 20px; font-size: 1.5rem; color: var(--text-main); border-left: 4px solid var(--primary); padding-left: 10px;}
 
-        /* === BẢNG VƯỢT LINK === */
+        /* === BẢNG THÔNG BÁO VÀ ĐẾM NGƯỢC === */
         .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 20px; opacity: 0; transition: 0.3s; }
-        .popup-content { background: var(--card-bg); border: 2px solid var(--primary); border-radius: 15px; padding: 25px; text-align: center; width: 100%; max-width: 350px; position: relative;}
+        .popup-content { background: var(--card-bg); border: 2px solid var(--primary); border-radius: 15px; padding: 25px; text-align: center; width: 100%; max-width: 380px; position: relative;}
         .close-btn { position: absolute; top: 0px; right: 15px; font-size: 35px; color: var(--text-main); cursor: pointer; }
-        .btn-tiep-tuc { display: block; width: 100%; background: var(--primary); color: #000; padding: 12px; border-radius: 25px; border: none; font-weight: bold; font-size: 1.1rem; margin-top: 20px; cursor: pointer;}
+        .btn-tiep-tuc { display: block; width: 100%; background: var(--primary); color: #000; padding: 12px; border-radius: 25px; border: none; font-weight: bold; font-size: 1.1rem; margin-top: 20px; cursor: pointer; transition: 0.3s;}
+        .btn-tiep-tuc:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,229,255,0.4); }
 
-        /* === 9. FOOTER === */
         footer { text-align: center; padding: 30px 20px; background: var(--card-bg); border-top: 1px solid var(--border); margin-top: auto; }
         .footer-links { margin-bottom: 15px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .footer-links a { color: var(--text-sub); text-decoration: none; font-size: 0.9rem; }
         .footer-links a:hover { color: var(--primary); }
         footer p { color: var(--text-sub); font-size: 0.9rem; }
 
-        /* === 8. NÚT LÊN ĐẦU TRANG === */
         #scrollTopBtn { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; background: var(--primary); color: #000; font-size: 20px; border: none; cursor: pointer; width: 45px; height: 45px; border-radius: 50%; box-shadow: 0 0 15px rgba(0,0,0,0.3); transition: 0.3s; }
 
-        /* === 10. TỐI ƯU MOBILE === */
         @media (max-width: 768px) {
             header h1 { font-size: 2rem; }
-            .nav-links { display: none; /* Thu gọn menu trên đt nếu cần */ }
+            .nav-links { display: none; }
             .gallery { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 12px 30px; }
             .img-container { height: 220px; }
             .card-title { font-size: 0.9rem; margin-bottom: 5px; }
@@ -188,7 +160,6 @@
 
         <div id="error-msg">⚠️ Lỗi: Không thể tải dữ liệu từ máy chủ. Vui lòng thử lại sau!</div>
         
-        <!-- SKELETON LOADING -->
         <div id="loading" class="gallery">
             <div class="skeleton skel-card"><div class="skel-img"></div><div class="skel-text"></div><div class="skel-text" style="width:50%"></div><div class="skel-btn"></div></div>
             <div class="skeleton skel-card"><div class="skel-img"></div><div class="skel-text"></div><div class="skel-text" style="width:50%"></div><div class="skel-btn"></div></div>
@@ -201,13 +172,11 @@
         </div>
     </div>
 
-    <!-- TRANG XEM CHI TIẾT (SINGLE VIEW) -->
+    <!-- TRANG XEM NỘI DUNG -->
     <div id="single-view">
         <div class="back-btn" onclick="goHome()">← Quay lại Trang chủ</div>
         <div class="single-grid">
-            <div class="single-img-wrap">
-                <img id="sv-img" src="" alt="Cover">
-            </div>
+            <div class="single-img-wrap"><img id="sv-img" src="" alt="Cover"></div>
             <div class="single-info">
                 <h2 id="sv-title">Tên Video</h2>
                 <div class="single-date" id="sv-date">📅 Đang cập nhật</div>
@@ -222,14 +191,24 @@
         </div>
     </div>
 
-    <!-- POPUP VƯỢT LINK -->
+    <!-- 1. POPUP ĐẾM NGƯỢC (Chỉ chạy khi nhảy sang tab QC) -->
+    <div id="countdown-popup" class="popup-overlay">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup('countdown-popup')">&times;</span>
+            <h3 style="color: var(--primary); margin-bottom: 10px;">⏳ Đợi <span id="cd-time" style="font-size: 1.5em; color: #ff0055;">6</span>s</h3>
+            <p id="cd-msg" style="font-size: 1.05rem; color: var(--text-main); margin: 15px 0; font-weight: bold; line-height: 1.5;">HÃY QUAY LẠI TRANG QUẢNG CÁO ĐỂ THỜI GIAN CHẠY ĐỦ 6S ĐỂ ỦNG HỘ ADMIN CÓ KINH PHÍ ❤️</p>
+            <button id="btn-cd-action" class="btn-tiep-tuc">QUAY LẠI TRANG QUẢNG CÁO</button>
+        </div>
+    </div>
+
+    <!-- 2. POPUP BẢNG KIA HIỆN RA KHI XONG -->
     <div id="link-popup" class="popup-overlay">
         <div class="popup-content">
             <span class="close-btn" onclick="closePopup('link-popup')">&times;</span>
             <h3 style="color: var(--primary); margin-bottom: 10px;">🎬 Muốn xem video? 👀</h3>
-            <p>🔗 Vượt link giúp Admin nha ❤️</p>
+            <p style="font-size: 1.1rem; font-weight:bold;">🔗 Vượt link giúp Admin nha ❤️</p>
             <p style="font-size: 0.9rem; margin-top: 5px;">🙏 Cảm ơn bạn đã ủng hộ! 💖</p>
-            <button id="btn-tiep-tuc" class="btn-tiep-tuc">🚀 TIẾP TỤC</button>
+            <button id="btn-final-watch" class="btn-tiep-tuc">🚀 TIẾP TỤC</button>
         </div>
     </div>
 
@@ -237,18 +216,14 @@
 
     <footer>
         <div class="footer-links">
-            <a onclick="goHome()">Trang chủ</a> · 
-            <a href="#">Liên hệ</a> · 
-            <a href="#">Điều khoản</a> · 
-            <a href="#">Chính sách bảo mật</a>
+            <a onclick="goHome()">Trang chủ</a> · <a href="#">Liên hệ</a> · <a href="#">Điều khoản</a> · <a href="#">Bảo mật</a>
         </div>
         <p>© 2026 KiraKira Cosplay</p>
     </footer>
 
     <script>
-        // === 7. DARK MODE (Lưu lựa chọn) ===
         const themeBtn = document.getElementById('theme-toggle');
-        const savedTheme = localStorage.getItem('theme') || 'dark'; // Mặc định là dark cho đẹp
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         themeBtn.innerHTML = savedTheme === 'light' ? '🌙' : '☀️';
 
@@ -260,17 +235,11 @@
             themeBtn.innerHTML = next === 'light' ? '🌙' : '☀️';
         });
 
-        // NÚT LÊN ĐẦU TRANG (Hiện khi cuộn)
         window.onscroll = function() {
-            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                document.getElementById("scrollTopBtn").style.display = "block";
-            } else {
-                document.getElementById("scrollTopBtn").style.display = "none";
-            }
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) { document.getElementById("scrollTopBtn").style.display = "block"; } else { document.getElementById("scrollTopBtn").style.display = "none"; }
         };
         function scrollToTop() { window.scrollTo({top: 0, behavior: 'smooth'}); }
 
-        // CHUYỂN TRANG 
         function goHome() {
             document.getElementById('single-view').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
@@ -296,26 +265,28 @@
             "https://cheaplyregainthrift.com/dv3xs68de?key=877289809972cac42e2b995f1b380545",
             "https://vnvip.eastasia.cloudapp.azure.com/j3wgo"
         ];
+        
         let currentAdIndex = 0;
         let globalData = [];
         let activeVideoUrl = "";
-        let adClicked = false;
+        let adClicked = false; // Trạng thái hoàn thành Vượt Link của 1 phiên
+
+        // --- CÁC BIẾN CHO TÍNH NĂNG ĐẾM NGƯỢC ---
+        let countdownTime = 6;
+        let countdownInterval = null;
+        let currentAdUrl = "";
 
         const tiktokImageCache = {};
 
-        // === LẤY DỮ LIỆU ===
         window.onload = function() {
             Papa.parse(GOOGLE_SHEET_CSV_URL, {
-                download: true,
-                header: true,
+                download: true, header: true,
                 complete: function(results) {
                     document.getElementById('loading').style.display = 'none';
                     if (results.data && results.data.length > 0) {
                         globalData = results.data.filter(i => i['Link Ảnh Bìa'] && i['Link Video']);
                         renderCards(globalData, 'video-gallery');
-                    } else {
-                        document.getElementById('error-msg').style.display = 'block';
-                    }
+                    } else { document.getElementById('error-msg').style.display = 'block'; }
                 },
                 error: function() {
                     document.getElementById('loading').style.display = 'none';
@@ -332,31 +303,23 @@
                     tiktokImageCache[link].then(url => { imgElement.src = url; });
                 } else {
                     let apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(link)}`;
-                    tiktokImageCache[link] = fetch(apiUrl)
-                        .then(res => res.json())
-                        .then(apiData => {
-                            if(apiData && apiData.code === 0 && apiData.data && apiData.data.cover) {
-                                let finalUrl = apiData.data.origin_cover || apiData.data.cover;
-                                imgElement.src = finalUrl; return finalUrl;
-                            } else { throw new Error("API Lỗi"); }
-                        })
-                        .catch(() => {
-                            let err = 'https://placehold.co/400x600/222/ff0055?text=Loi+Anh';
-                            imgElement.src = err; return err;
-                        });
+                    tiktokImageCache[link] = fetch(apiUrl).then(res => res.json()).then(apiData => {
+                        if(apiData && apiData.code === 0 && apiData.data && apiData.data.cover) {
+                            let finalUrl = apiData.data.origin_cover || apiData.data.cover;
+                            imgElement.src = finalUrl; return finalUrl;
+                        } else { throw new Error("API Lỗi"); }
+                    }).catch(() => {
+                        let err = 'https://placehold.co/400x600/222/ff0055?text=Loi+Anh';
+                        imgElement.src = err; return err;
+                    });
                 }
-            } else {
-                imgElement.src = link;
-            }
+            } else { imgElement.src = link; }
         }
 
-        // TẠO THẺ BÀI TRANG CHỦ
         function renderCards(dataArray, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
-            if(containerId === 'video-gallery') {
-                container.innerHTML = '<div id="no-result">🔍 Không tìm thấy kết quả nào phù hợp.</div>';
-            }
+            if(containerId === 'video-gallery') { container.innerHTML = '<div id="no-result">🔍 Không tìm thấy kết quả nào phù hợp.</div>'; }
 
             dataArray.forEach(item => {
                 let titleText = item['Tên Video'] ? item['Tên Video'].trim() : 'Video Cosplay';
@@ -366,19 +329,14 @@
                 let descText = item['Mô tả'] ? item['Mô tả'].trim() : 'Theo dõi ngay để xem những video cosplay hấp dẫn nhất.';
 
                 const card = document.createElement('div');
-                card.className = 'card video-card'; 
-                card.dataset.title = titleText.toLowerCase();
+                card.className = 'card video-card'; card.dataset.title = titleText.toLowerCase();
 
-                // Chuyển sang Trang Xem Chi Tiết
-                card.onclick = function() {
-                    openSingleView(titleText, coverLink, videoLink, dateText, descText);
-                };
+                card.onclick = function() { openSingleView(titleText, coverLink, videoLink, dateText, descText); };
 
                 const imgContainer = document.createElement('div');
                 imgContainer.className = 'img-container';
                 const img = document.createElement('img');
-                img.className = 'card-img';
-                getImageUrl(coverLink, img);
+                img.className = 'card-img'; getImageUrl(coverLink, img);
                 imgContainer.appendChild(img);
 
                 const infoContainer = document.createElement('div');
@@ -395,7 +353,6 @@
             });
         }
 
-        // MỞ TRANG XEM RIÊNG
         function openSingleView(title, cover, video, date, desc) {
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('single-view').style.display = 'block';
@@ -404,60 +361,101 @@
             document.getElementById('sv-title').innerText = title;
             document.getElementById('sv-date').innerText = '📅 ' + date;
             document.getElementById('sv-desc').innerText = desc;
-            
-            let imgEl = document.getElementById('sv-img');
-            getImageUrl(cover, imgEl);
+            getImageUrl(cover, document.getElementById('sv-img'));
 
-            // Gán dữ liệu cho nút XEM NGAY khổng lồ
             activeVideoUrl = video;
-            adClicked = false; 
+            adClicked = false; // Reset trạng thái click quảng cáo cho video mới
 
-            // Render Nội Dung Liên Quan (Lấy random 4 cái)
             let shuffled = [...globalData].sort(() => 0.5 - Math.random());
-            let related = shuffled.slice(0, 4);
-            renderCards(related, 'related-gallery');
+            renderCards(shuffled.slice(0, 4), 'related-gallery');
         }
 
-        // TÌM KIẾM
         function doSearch() {
             let filter = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.querySelectorAll('#video-gallery .video-card');
             let hasResult = false;
             
             cards.forEach(card => {
-                if(card.dataset.title.includes(filter)) {
-                    card.style.display = 'flex';
-                    hasResult = true;
-                } else {
-                    card.style.display = 'none';
-                }
+                if(card.dataset.title.includes(filter)) { card.style.display = 'flex'; hasResult = true; } 
+                else { card.style.display = 'none'; }
             });
-
             document.getElementById('no-result').style.display = hasResult ? 'none' : 'block';
         }
-
         document.getElementById('searchInput').addEventListener('keyup', doSearch);
 
-        // NÚT XEM NGAY TRONG TRANG CHI TIẾT
+        // ==========================================
+        // THUẬT TOÁN ĐẾM NGƯỢC KHI MỞ TAB QUẢNG CÁO
+        // ==========================================
         document.getElementById('btn-watch-single').addEventListener('click', function() {
             if(!activeVideoUrl) return;
 
             if (!adClicked) {
-                // Lần 1: Bắn quảng cáo, hiện popup Vượt link
-                let adUrl = adLinks[currentAdIndex];
-                window.open(adUrl, '_blank');
+                // 1. Mở ngay quảng cáo ở tab mới
+                currentAdUrl = adLinks[currentAdIndex];
+                window.open(currentAdUrl, '_blank');
                 currentAdIndex = (currentAdIndex + 1) % adLinks.length;
-                adClicked = true; 
-                showPopup('link-popup');
+                
+                // 2. Thiết lập popup đếm ngược
+                countdownTime = 6;
+                document.getElementById('cd-time').innerText = countdownTime;
+                document.getElementById('cd-msg').innerHTML = "HÃY QUAY LẠI TRANG QUẢNG CÁO ĐỂ THỜI GIAN CHẠY ĐỦ 6S ĐỂ ỦNG HỘ ADMIN CÓ KINH PHÍ ❤️";
+                
+                let btnAction = document.getElementById('btn-cd-action');
+                btnAction.innerText = "QUAY LẠI TRANG QUẢNG CÁO";
+                btnAction.onclick = function() {
+                    window.open(currentAdUrl, '_blank');
+                };
+                
+                showPopup('countdown-popup');
+                
+                // 3. Đếm thời gian khi web bị ẩn (document.hidden)
+                if(countdownInterval) clearInterval(countdownInterval);
+                countdownInterval = setInterval(() => {
+                    // Nếu người dùng ĐANG MỞ tab quảng cáo (trang web gốc bị che/ẩn đi)
+                    if (document.hidden) {
+                        countdownTime--;
+                        if (countdownTime <= 0) {
+                            clearInterval(countdownInterval);
+                            document.getElementById('cd-time').innerText = 0;
+                            document.getElementById('cd-msg').innerHTML = "✅ Cảm ơn bạn đã ủng hộ Admin! 💖<br>Bây giờ bạn có thể tiếp tục xem video.";
+                            
+                            // Đổi nút thành XEM TIẾP
+                            btnAction.innerText = "XEM TIẾP";
+                            btnAction.onclick = function() {
+                                closePopup('countdown-popup');
+                                showPopup('link-popup'); // Bảng KIA hiện ra
+                            };
+                        } else {
+                            document.getElementById('cd-time').innerText = countdownTime;
+                        }
+                    }
+                }, 1000);
+
             } else {
-                // Lần 2: Mở video
+                // Nếu đã qua hết quy trình rồi thì bấm vào mở luôn Video
                 window.open(activeVideoUrl, '_blank');
             }
         });
 
-        // NÚT TIẾP TỤC TRONG BẢNG VƯỢT LINK
-        document.getElementById('btn-tiep-tuc').addEventListener('click', function() {
+        // Theo dõi để cảnh báo khi người dùng quay về web quá sớm
+        document.addEventListener('visibilitychange', function() {
+            if (document.getElementById('countdown-popup').style.display === 'flex' && countdownTime > 0) {
+                if (!document.hidden) {
+                    // Quay lại khi chưa đếm xong
+                    document.getElementById('cd-msg').innerHTML = "HÃY QUAY LẠI TRANG QUẢNG CÁO ĐỂ THỜI GIAN CHẠY ĐỦ 6S ĐỂ ỦNG HỘ ADMIN CÓ KINH PHÍ ❤️<br><br><span style='color:#ff3366; font-size:0.95rem;'>⚠️ Thời gian ĐANG DỪNG! Vui lòng quay lại tab quảng cáo.</span>";
+                } else {
+                    // Đang ở tab quảng cáo
+                    document.getElementById('cd-msg').innerHTML = "HÃY QUAY LẠI TRANG QUẢNG CÁO ĐỂ THỜI GIAN CHẠY ĐỦ 6S ĐỂ ỦNG HỘ ADMIN CÓ KINH PHÍ ❤️";
+                }
+            }
+        });
+
+        // ==========================================
+        // NÚT "TIẾP TỤC" TRONG BẢNG VƯỢT LINK CUỐI CÙNG
+        // ==========================================
+        document.getElementById('btn-final-watch').addEventListener('click', function() {
             if(activeVideoUrl) {
+                adClicked = true; // Đánh dấu đã qua hết cửa ải
                 window.open(activeVideoUrl, '_blank');
                 closePopup('link-popup');
             }
