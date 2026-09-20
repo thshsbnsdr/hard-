@@ -2,35 +2,27 @@
 <html lang="vi" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <!-- Tối ưu hóa viewport cho Mobile chuẩn 100% -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="referrer" content="no-referrer">
     <title>KiraKira Cosplay - Nơi Để AE Giải Tỏa</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
-        /* Đảm bảo không phần tử nào bị tràn viền (Gây lỗi to màn hình) */
         * { box-sizing: border-box; }
 
-        /* === BIẾN MÀU CHO GIAO DIỆN SÁNG === */
         :root {
-            --primary: #ff007f;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --text: #111111;
+            --primary: #ff007f; --card-bg: rgba(255, 255, 255, 0.95); --text: #111111;
             --bg-color-1: #ffe6f2; --bg-color-2: #ffffff; --bg-color-3: #e6f7ff; --bg-color-4: #f3e6ff;
             --title-shadow: 0 0 5px rgba(255, 0, 127, 0.3); --header-text: #222;
-            --input-bg: rgba(255, 255, 255, 0.9); --placeholder: #666;
-            --border-color: rgba(255, 0, 127, 0.3);
+            --input-bg: rgba(255, 255, 255, 0.9); --placeholder: #666; --border-color: rgba(255, 0, 127, 0.3);
+            --stats-text: #555;
         }
 
-        /* === BIẾN MÀU CHO GIAO DIỆN TỐI === */
         [data-theme="dark"] {
-            --primary: #00e5ff;
-            --card-bg: rgba(20, 20, 25, 0.85);
-            --text: #ffffff;
+            --primary: #00e5ff; --card-bg: rgba(20, 20, 25, 0.85); --text: #ffffff;
             --bg-color-1: #090a0f; --bg-color-2: #1a1a2e; --bg-color-3: #0f3460; --bg-color-4: #16213e;
             --title-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary); --header-text: #ffffff;
-            --input-bg: rgba(0, 0, 0, 0.6); --placeholder: #aaa;
-            --border-color: rgba(0, 229, 255, 0.2);
+            --input-bg: rgba(0, 0, 0, 0.6); --placeholder: #aaa; --border-color: rgba(0, 229, 255, 0.2);
+            --stats-text: #aaa;
         }
         
         body {
@@ -38,7 +30,7 @@
             background: linear-gradient(-45deg, var(--bg-color-1), var(--bg-color-2), var(--bg-color-3), var(--bg-color-4));
             background-size: 400% 400%; animation: gradientBG 15s ease infinite;
             min-height: 100vh; display: flex; flex-direction: column; transition: background 0.5s ease, color 0.5s ease;
-            overflow-x: hidden; /* Chống cuộn ngang */
+            overflow-x: hidden;
         }
 
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
@@ -62,7 +54,6 @@
         }
         .search-box:focus { box-shadow: 0 0 20px var(--primary); transform: scale(1.02); }
 
-        /* Lưới Gallery cho MÁY TÍNH (PC) */
         .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; padding: 0 40px 40px; max-width: 1200px; margin: 0 auto; flex-grow: 1; width: 100%; }
 
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
@@ -80,7 +71,21 @@
         .card:hover .card-img { transform: scale(1.08); }
 
         .card-info { padding: 15px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; text-align: center; }
-        .card-title { font-size: 1.05rem; font-weight: bold; color: var(--text); margin-bottom: 15px; line-height: 1.4; }
+        .card-title { font-size: 1.05rem; font-weight: bold; color: var(--text); margin-bottom: 10px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* KHU VỰC CHỨA LƯỢT XEM VÀ TYM */
+        .card-stats {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.9rem; color: var(--stats-text); margin-bottom: 12px; padding: 0 10px;
+        }
+        .view-count { display: flex; align-items: center; gap: 5px; font-weight: bold; }
+        .like-btn {
+            font-size: 1.2rem; cursor: pointer; transition: transform 0.2s, filter 0.2s;
+            user-select: none;
+        }
+        .like-btn:hover { transform: scale(1.2); }
+        @keyframes heartPop { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
+        .like-btn.liked { animation: heartPop 0.3s ease; color: #ff0055; }
 
         .btn-watch {
             display: inline-block; background-color: var(--card-bg); color: var(--primary);
@@ -97,50 +102,46 @@
         #scrollTopBtn { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99; background-color: var(--primary); color: #fff; font-size: 20px; border: none; outline: none; cursor: pointer; padding: 12px; border-radius: 50%; box-shadow: 0 0 15px var(--primary); transition: 0.3s; width: 45px; height: 45px; text-align: center; line-height: 18px; }
         #scrollTopBtn:hover { transform: scale(1.1); }
 
-        /* BẢNG THÔNG BÁO CĂN GIỮA */
+        /* BẢNG THÔNG BÁO DÙNG CHUNG */
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        #popup-overlay { 
+        .popup-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.85); z-index: 9999; 
-            display: flex; justify-content: center; align-items: center; 
-            padding: 20px; transition: opacity 0.3s ease; 
+            display: none; justify-content: center; align-items: center; 
+            padding: 20px; transition: opacity 0.3s ease; opacity: 0;
         }
         .popup-content { 
             background: var(--card-bg); border: 2px solid var(--primary); border-radius: 15px; 
-            padding: 20px; text-align: center; position: relative; 
+            padding: 25px; text-align: center; position: relative; 
             width: 100%; max-width: 350px; 
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
         .close-btn { position: absolute; top: -5px; right: 10px; font-size: 35px; color: var(--text); cursor: pointer; transition: 0.2s; }
         .close-btn:hover { color: #ff0055; transform: scale(1.2); }
         .popup-img { width: 100%; border-radius: 10px; margin-bottom: 10px; object-fit: contain; max-height: 250px; }
-        .popup-content h3 { color: var(--primary); margin: 10px 0; text-transform: uppercase; font-size: 1.2rem; }
-        .popup-content p { font-size: 0.9rem; color: var(--text); margin-bottom: 0; }
+        
+        /* Chỉnh riêng bảng Vượt Link */
+        #link-popup .popup-content h3 { color: var(--primary); margin: 10px 0; font-size: 1.4rem; }
+        #link-popup .popup-content p { font-size: 1.1rem; color: var(--text); margin: 10px 0; font-weight: bold;}
+        .btn-tiep-tuc {
+            display: inline-block; background: var(--primary); color: #fff; border: none;
+            padding: 12px 30px; border-radius: 25px; font-size: 1.1rem; font-weight: bold;
+            margin-top: 15px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px var(--border-color);
+            text-transform: uppercase; letter-spacing: 1px; width: 100%;
+        }
+        .btn-tiep-tuc:hover { transform: translateY(-3px); box-shadow: 0 8px 20px var(--border-color); }
 
-        /* ==========================================================
-           === CHẾ ĐỘ RESPONSIVE (ÉP CỨNG 2 CỘT CHO ĐIỆN THOẠI) === 
-           ========================================================== */
         @media (max-width: 768px) {
             header { padding: 50px 10px 10px; }
             header h1 { font-size: 2rem; letter-spacing: 2px; }
             header p { font-size: 0.9rem; }
-            
-            /* Ép cứng chia thành 2 phần bằng nhau (2 cột) */
-            .gallery { 
-                grid-template-columns: repeat(2, 1fr); 
-                gap: 10px; /* Thu hẹp khoảng cách giữa 2 thẻ */
-                padding: 0 10px 30px; 
-            }
-            
-            /* Chiều cao ảnh vừa vặn, không bị dài ngoẵng */
+            .gallery { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 10px 30px; }
             .img-container { height: 200px; }
-            
             .card-info { padding: 8px; }
             .card-title { font-size: 0.85rem; margin-bottom: 8px; line-height: 1.2; }
-            
-            /* Nút bấm nhỏ lại để không bị tràn viền */
+            .card-stats { font-size: 0.8rem; padding: 0 5px; margin-bottom: 8px; }
+            .like-btn { font-size: 1.1rem; }
             .btn-watch { font-size: 0.7rem; padding: 6px 10px; border-width: 1px; }
-            
             #theme-toggle { font-size: 0.8rem; padding: 6px 10px; top: 10px; right: 10px; }
             .search-box { font-size: 0.9rem; padding: 10px 20px; }
         }
@@ -150,12 +151,24 @@
     
     <button id="theme-toggle">🌙 Giao diện Tối</button>
 
-    <div id="popup-overlay">
+    <!-- BẢNG THÔNG BÁO CHÀO MỪNG (Vào web hiện luôn) -->
+    <div id="welcome-popup" class="popup-overlay">
         <div class="popup-content">
-            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <span class="close-btn" onclick="closePopup('welcome-popup')">&times;</span>
             <img src="https://i.postimg.cc/RFnq2cJM/315c2199-764b-4a62-b467-99c3a42ad7e9.png" alt="Thông báo" class="popup-img">
-            <h3>Chào mừng AE!</h3>
-            <p>Chúc anh em có những phút giây giải tỏa vui vẻ tại KiraKira. Đừng quên click xem video nhé!</p>
+            <h3 style="color: var(--primary); margin: 10px 0; text-transform: uppercase;">Chào mừng AE!</h3>
+            <p style="font-size: 0.9rem; margin-bottom: 0;">Chúc anh em có những phút giây giải tỏa vui vẻ tại KiraKira. Đừng quên click xem video nhé!</p>
+        </div>
+    </div>
+
+    <!-- BẢNG THÔNG BÁO VƯỢT LINK (Hiện khi bấm xem video) -->
+    <div id="link-popup" class="popup-overlay">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup('link-popup')">&times;</span>
+            <h3>🎬 Muốn xem video? 👀</h3>
+            <p>🔗 Vượt link giúp Admin nha ❤️</p>
+            <p style="font-size: 0.95rem; font-weight: normal;">🙏 Cảm ơn bạn đã ủng hộ! 💖</p>
+            <button id="btn-tiep-tuc" class="btn-tiep-tuc">🚀 Tiếp tục</button>
         </div>
     </div>
 
@@ -178,7 +191,7 @@
     </footer>
 
     <script>
-        // Chế độ Sáng/Tối
+        // --- CHẾ ĐỘ DARK/LIGHT MODE ---
         const themeToggleBtn = document.getElementById('theme-toggle');
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -196,11 +209,22 @@
             themeToggleBtn.innerHTML = theme === 'light' ? '🌙 Chế độ Tối' : '☀️ Chế độ Sáng';
         }
 
-        function closePopup() {
-            document.getElementById('popup-overlay').style.opacity = '0';
-            setTimeout(() => { document.getElementById('popup-overlay').style.display = 'none'; }, 300); 
+        // --- QUẢN LÝ POPUP ---
+        function showPopup(id) {
+            let el = document.getElementById(id);
+            el.style.display = 'flex';
+            setTimeout(() => { el.style.opacity = '1'; }, 10);
+        }
+        function closePopup(id) {
+            let el = document.getElementById(id);
+            el.style.opacity = '0';
+            setTimeout(() => { el.style.display = 'none'; }, 300);
         }
 
+        // Hiện popup chào mừng lúc mới vào
+        window.addEventListener('DOMContentLoaded', () => { showPopup('welcome-popup'); });
+
+        // --- DỮ LIỆU & BIẾN TOÀN CỤC ---
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAb1YZ1F5eH0CM5u7CGph-4qmgZoVjXf5QvWX90T-1sjhggBM7SM0ROCmpJYontZv8UxXDccsAKzGW/pub?gid=0&single=true&output=csv';
         const adLinks = [
             "https://vt.tiktok.com/ZS9h36wYouDLb-ojzE1/",
@@ -210,9 +234,18 @@
             "https://vnvip.eastasia.cloudapp.azure.com/j3wgo"
         ];
         let currentAdIndex = 0;
-
-        // Bộ nhớ đệm chống chặn TikTok
         const tiktokImageCache = {}; 
+        
+        // Biến lưu trữ video đang được click để xử lý Vượt Link
+        let activeCardElement = null;
+        let activeVideoUrl = "";
+
+        // Hàm tạo View ảo nhất quán từ URL
+        function generateBaseViews(url) {
+            let num = 0;
+            for(let i=0; i<url.length; i++) { num += url.charCodeAt(i); }
+            return (num * 123) % 4000 + 1000; // Ra số từ 1000 đến 5000
+        }
 
         window.onload = function() {
             Papa.parse(GOOGLE_SHEET_CSV_URL, {
@@ -222,8 +255,10 @@
                     const data = results.data;
                     const gallery = document.getElementById('video-gallery');
                     document.getElementById('loading').style.display = 'none';
-                    
                     let cardIndex = 0; 
+                    
+                    // Lấy danh sách yêu thích từ máy
+                    let likedVideos = JSON.parse(localStorage.getItem('liked_videos') || '[]');
 
                     data.forEach(item => {
                         let titleText = item['Tên Video'] ? item['Tên Video'].trim() : 'Video Cosplay Mới';
@@ -234,22 +269,20 @@
                             
                             const card = document.createElement('a');
                             card.className = 'card video-card'; 
-                            card.href = videoLink;
-                            card.target = '_blank'; 
+                            card.href = "#"; // Chặn link mở trực tiếp
                             card.style.animationDelay = `${cardIndex * 0.1}s`;
                             cardIndex++;
-                            
                             card.dataset.adClicked = "false"; 
+
+                            // XỬ LÝ CLICK CARD -> HIỆN BẢNG VƯỢT LINK
                             card.addEventListener('click', function(event) {
-                                if (this.dataset.adClicked === "false") {
-                                    event.preventDefault(); 
-                                    let adUrl = adLinks[currentAdIndex];
-                                    window.open(adUrl, '_blank');
-                                    currentAdIndex = (currentAdIndex + 1) % adLinks.length;
-                                    this.dataset.adClicked = "true"; 
-                                }
+                                event.preventDefault(); 
+                                activeCardElement = this;
+                                activeVideoUrl = videoLink;
+                                showPopup('link-popup');
                             });
 
+                            // Ảnh bìa
                             const imgContainer = document.createElement('div');
                             imgContainer.className = 'img-container';
                             const img = document.createElement('img');
@@ -258,7 +291,6 @@
 
                             if(coverLink.includes('tiktok.com')) {
                                 img.src = 'https://dummyimage.com/400x600/222/fff.png&text=%C4%90ang+L%E1%BA%A5y+%E1%BA%A2nh...';
-                                
                                 if (tiktokImageCache[coverLink]) {
                                     tiktokImageCache[coverLink].then(url => { img.src = url; })
                                     .catch(() => { img.src = 'https://dummyimage.com/400x600/222/ff0055.png&text=L%E1%BB%97i+%E1%BA%A2nh'; });
@@ -269,36 +301,67 @@
                                         .then(apiData => {
                                             if(apiData && apiData.code === 0 && apiData.data && apiData.data.cover) {
                                                 let finalUrl = apiData.data.origin_cover || apiData.data.cover;
-                                                img.src = finalUrl;
-                                                return finalUrl;
-                                            } else {
-                                                throw new Error("Lỗi API");
-                                            }
+                                                img.src = finalUrl; return finalUrl;
+                                            } else { throw new Error("Lỗi API"); }
                                         })
                                         .catch(err => {
                                             let errorUrl = 'https://dummyimage.com/400x600/222/ff0055.png&text=L%E1%BB%97i+%E1%BA%A2nh';
-                                            img.src = errorUrl;
-                                            return errorUrl;
+                                            img.src = errorUrl; return errorUrl;
                                         });
                                 }
                             } else {
                                 img.src = coverLink;
                                 img.onerror = function() { this.src = 'https://dummyimage.com/400x600/222/ff0055.png&text=L%E1%BB%97i+T%E1%BA%A3i+%E1%BA%A2nh'; };
                             }
-
                             imgContainer.appendChild(img);
 
+                            // Tính Toán Lượt Xem
+                            let baseViews = generateBaseViews(videoLink);
+                            let localViews = parseInt(localStorage.getItem('view_' + videoLink)) || 0;
+                            let totalViews = baseViews + localViews;
+                            let isLiked = likedVideos.includes(videoLink);
+
+                            // Vùng thông tin
                             const infoContainer = document.createElement('div');
                             infoContainer.className = 'card-info';
+                            
                             const title = document.createElement('div');
                             title.className = 'card-title';
                             title.textContent = titleText;
+
+                            // Khu vực Stats (MẮT XEM + THẢ TYM)
+                            const statsDiv = document.createElement('div');
+                            statsDiv.className = 'card-stats';
+                            statsDiv.innerHTML = `
+                                <span class="view-count">👁️ <span class="v-num">${totalViews.toLocaleString()}</span></span>
+                                <span class="like-btn ${isLiked ? 'liked' : ''}" data-url="${videoLink}">${isLiked ? '❤️' : '🤍'}</span>
+                            `;
+
+                            // Sự kiện Thả Tym (stopPropagation để không bị hiện bảng Vượt Link)
+                            statsDiv.querySelector('.like-btn').addEventListener('click', function(e) {
+                                e.preventDefault();
+                                e.stopPropagation(); 
+                                let url = this.getAttribute('data-url');
+                                let currentLikes = JSON.parse(localStorage.getItem('liked_videos') || '[]');
+                                
+                                if (currentLikes.includes(url)) {
+                                    currentLikes = currentLikes.filter(l => l !== url);
+                                    this.textContent = '🤍';
+                                    this.classList.remove('liked');
+                                } else {
+                                    currentLikes.push(url);
+                                    this.textContent = '❤️';
+                                    this.classList.add('liked');
+                                }
+                                localStorage.setItem('liked_videos', JSON.stringify(currentLikes));
+                            });
 
                             const btnWatch = document.createElement('div');
                             btnWatch.className = 'btn-watch';
                             btnWatch.textContent = '▶ Xem Video';
 
                             infoContainer.appendChild(title);
+                            infoContainer.appendChild(statsDiv);
                             infoContainer.appendChild(btnWatch);
 
                             card.appendChild(imgContainer);
@@ -310,6 +373,34 @@
             });
         }
 
+        // --- XỬ LÝ NÚT "TIẾP TỤC" TRONG BẢNG VƯỢT LINK ---
+        document.getElementById('btn-tiep-tuc').addEventListener('click', function() {
+            if(!activeCardElement || !activeVideoUrl) return;
+
+            if (activeCardElement.dataset.adClicked === "false") {
+                // Lần 1: Bấm "Tiếp tục" -> Mở Link Quảng Cáo
+                let adUrl = adLinks[currentAdIndex];
+                window.open(adUrl, '_blank');
+                currentAdIndex = (currentAdIndex + 1) % adLinks.length;
+                activeCardElement.dataset.adClicked = "true"; 
+                closePopup('link-popup');
+            } else {
+                // Lần 2 (Sau khi đã xem QC): Bấm "Tiếp tục" -> Mở Video
+                window.open(activeVideoUrl, '_blank');
+                closePopup('link-popup');
+                
+                // Tăng Lượt Xem
+                let currentViews = parseInt(localStorage.getItem('view_' + activeVideoUrl)) || 0;
+                localStorage.setItem('view_' + activeVideoUrl, currentViews + 1);
+                
+                // Cập nhật số liệu trên thẻ bài đó ngay lập tức (cộng 1 vào giao diện)
+                let numElement = activeCardElement.querySelector('.v-num');
+                let currentTotal = parseInt(numElement.textContent.replace(/,/g, ''));
+                numElement.textContent = (currentTotal + 1).toLocaleString();
+            }
+        });
+
+        // TÌM KIẾM
         document.getElementById('searchInput').addEventListener('keyup', function() {
             let filter = this.value.toLowerCase();
             let cards = document.querySelectorAll('.video-card');
@@ -320,6 +411,7 @@
             });
         });
 
+        // CUỘN LÊN ĐẦU TRANG
         window.onscroll = function() {
             let btn = document.getElementById("scrollTopBtn");
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) { btn.style.display = "block"; } 
