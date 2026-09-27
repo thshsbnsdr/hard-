@@ -9,7 +9,7 @@
     <meta name="description" content="KiraKira Cosplay - Nơi tổng hợp những video cosplay anime, game xịn sò nhất.">
     <link rel="icon" href="https://placehold.co/100x100/ff007f/fff?text=K" type="image/x-icon">
 
-    <script src="https://script.google.com/macros/s/AKfycbxjRuLHdzyh3bC6Z0Fr9zNFX4yhgE8g69_Tl8QkXp_H05W1DGamKoWVQ78KvDqPjjvk/exec>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -55,7 +55,6 @@
         .img-container { width: 100%; height: 320px; background: #111; position: relative; overflow: hidden;}
         .card-img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* CHỨC NĂNG VIDEO HOT */
         .badge-hot {
             position: absolute; top: 10px; right: 10px;
             background: linear-gradient(45deg, #ff0055, #ffaa00);
@@ -177,14 +176,14 @@
 
     <script>
         // ==========================================
-        // CẤU HÌNH CỦA BẠN Ở ĐÂY
+        // CẤU HÌNH CỦA BẠN 
         // ==========================================
         
         // 1. LINK DỮ LIỆU GOOGLE SHEET CỦA WEB
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAb1YZ1F5eH0CM5u7CGph-4qmgZoVjXf5QvWX90T-1sjhggBM7SM0ROCmpJYontZv8UxXDccsAKzGW/pub?gid=0&single=true&output=csv';
         
-        // 2. LINK APPS SCRIPT (Dán URL ở bước 2 vào đây)
-        const SCRIPT_URL = "DÁN_LINK_APPS_SCRIPT_CỦA_BẠN_VÀO_ĐÂY"; 
+        // 2. LINK APPS SCRIPT CỦA BẠN ĐÃ ĐƯỢC CHÈN VÀO ĐÂY:
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjRuLHdzyh3bC6Z0Fr9zNFX4yhgE8g69_Tl8QkXp_H05W1DGamKoWVQ78KvDqPjjvk/exec"; 
         
         // 3. Đã xóa link quảng cáo số 3 và 4 theo yêu cầu
         const adLinks = [
@@ -226,7 +225,7 @@
 
         // HÀM THEO DÕI NGẦM (Gửi data về Sheet)
         function trackData(type, value) {
-            if(!SCRIPT_URL || SCRIPT_URL === "DÁN_LINK_APPS_SCRIPT_CỦA_BẠN_VÀO_ĐÂY") return; // Bỏ qua nếu chưa cài đặt
+            if(!SCRIPT_URL) return;
             let url = `${SCRIPT_URL}?type=${type}`;
             if(type === 'video') url += `&name=${encodeURIComponent(value)}`;
             if(type === 'ad') url += `&link=${encodeURIComponent(value)}`;
@@ -249,7 +248,7 @@
 
         function getImageUrl(link, imgElement) {
             if(link.includes('tiktok.com')) {
-                imgElement.src = 'https://placehold.co/400x600/222/fff?text=Tiktok+Cover'; // Bỏ qua API Tikwm do lỗi load chậm, dùng ảnh phụ
+                imgElement.src = 'https://placehold.co/400x600/222/fff?text=Tiktok+Cover'; 
                 fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(link)}`).then(res => res.json()).then(apiData => {
                     if(apiData && apiData.data && apiData.data.cover) imgElement.src = apiData.data.origin_cover || apiData.data.cover;
                 }).catch(()=>{});
